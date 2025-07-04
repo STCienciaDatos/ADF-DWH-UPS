@@ -42,180 +42,396 @@
 						"mappings": [
 							{
 								"source": {
-									"name": "IDENTIFICACION_POSTULANTE",
-									"type": "String",
-									"physicalType": "text"
+									"name": "codigo_interno_pos_alu",
+									"type": "Decimal",
+									"physicalType": "numeric"
 								},
 								"sink": {
-									"name": "IDENTIFICACION_POSTULANTE",
+									"name": "codigo_interno_pos_alu",
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
+								}
+							},
+							{
+								"source": {
+									"name": "tipo_identificacion",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "tipo_identificacion",
 									"type": "String",
 									"physicalType": "UTF8"
 								}
 							},
 							{
 								"source": {
-									"name": "TIPO_IDENTIFICACION_POSTULANTE",
+									"name": "nro_identificacion",
 									"type": "String",
-									"physicalType": "text"
+									"physicalType": "character varying"
 								},
 								"sink": {
-									"name": "TIPO_IDENTIFICACION_POSTULANTE",
+									"name": "nro_identificacion",
 									"type": "String",
 									"physicalType": "UTF8"
 								}
 							},
 							{
 								"source": {
-									"name": "NOMBRES_POSTULANTE",
+									"name": "nombres",
 									"type": "String",
-									"physicalType": "text"
+									"physicalType": "character varying"
 								},
 								"sink": {
-									"name": "NOMBRES_POSTULANTE",
+									"name": "nombres",
 									"type": "String",
 									"physicalType": "UTF8"
 								}
 							},
 							{
 								"source": {
-									"name": "APELLIDOS_POSTULANTE",
+									"name": "apellidos",
 									"type": "String",
-									"physicalType": "text"
+									"physicalType": "character varying"
 								},
 								"sink": {
-									"name": "APELLIDOS_POSTULANTE",
+									"name": "apellidos",
 									"type": "String",
 									"physicalType": "UTF8"
 								}
 							},
 							{
 								"source": {
-									"name": "CORREO_PERSONAL_POSTULANTE",
+									"name": "correo_personal",
 									"type": "String",
-									"physicalType": "text"
+									"physicalType": "character varying"
 								},
 								"sink": {
-									"name": "CORREO_PERSONAL_POSTULANTE",
+									"name": "correo_personal",
 									"type": "String",
 									"physicalType": "UTF8"
 								}
 							},
 							{
 								"source": {
-									"name": "CORREO_INSTITUCIONAL_POSTULANTE",
+									"name": "correo_institucional",
 									"type": "String",
-									"physicalType": "text"
+									"physicalType": "character varying"
 								},
 								"sink": {
-									"name": "CORREO_INSTITUCIONAL_POSTULANTE",
+									"name": "correo_institucional",
 									"type": "String",
 									"physicalType": "UTF8"
 								}
 							},
 							{
 								"source": {
-									"name": "TELEFONO_POSTULANTE",
+									"name": "genero",
 									"type": "String",
-									"physicalType": "text"
+									"physicalType": "character varying"
 								},
 								"sink": {
-									"name": "TELEFONO_POSTULANTE",
+									"name": "genero",
 									"type": "String",
 									"physicalType": "UTF8"
 								}
 							},
 							{
 								"source": {
-									"name": "CELULAR_POSTULANTE",
+									"name": "etnia",
 									"type": "String",
-									"physicalType": "text"
+									"physicalType": "character varying"
 								},
 								"sink": {
-									"name": "CELULAR_POSTULANTE",
+									"name": "etnia",
 									"type": "String",
 									"physicalType": "UTF8"
 								}
 							},
 							{
 								"source": {
-									"name": "GENERO_POSTULANTE",
+									"name": "estado_civil",
 									"type": "String",
-									"physicalType": "text"
+									"physicalType": "character varying"
 								},
 								"sink": {
-									"name": "GENERO_POSTULANTE",
+									"name": "estado_civil",
 									"type": "String",
 									"physicalType": "UTF8"
 								}
 							},
 							{
 								"source": {
-									"name": "ETNIA_POSTULANTE",
-									"type": "String",
-									"physicalType": "text"
-								},
-								"sink": {
-									"name": "ETNIA_POSTULANTE",
-									"type": "String",
-									"physicalType": "UTF8"
-								}
-							},
-							{
-								"source": {
-									"name": "FECHA_NACIMIENTO_POSTULANTE",
+									"name": "fecha_nacimiento",
 									"type": "DateTime",
 									"physicalType": "date"
 								},
 								"sink": {
-									"name": "FECHA_NACIMIENTO_POSTULANTE",
+									"name": "fecha_nacimiento",
 									"type": "DateTime",
 									"physicalType": "INT_96"
 								}
 							},
 							{
 								"source": {
-									"name": "INDICADOR_EXTRANJERO_POSTULANTE",
+									"name": "telefono",
 									"type": "String",
-									"physicalType": "text"
+									"physicalType": "character varying"
 								},
 								"sink": {
-									"name": "INDICADOR_EXTRANJERO_POSTULANTE",
+									"name": "telefono",
 									"type": "String",
 									"physicalType": "UTF8"
 								}
 							},
 							{
 								"source": {
-									"name": "CODIGO_INTERNO_POSTULANTE",
-									"type": "Int32",
-									"physicalType": "integer"
+									"name": "celular",
+									"type": "String",
+									"physicalType": "character varying"
 								},
 								"sink": {
-									"name": "CODIGO_INTERNO_POSTULANTE",
-									"type": "Int32",
-									"physicalType": "INT_32"
+									"name": "celular",
+									"type": "String",
+									"physicalType": "UTF8"
 								}
 							},
 							{
 								"source": {
-									"name": "AUD_FECHA_ADICION",
+									"name": "indicador_extranjero",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "indicador_extranjero",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "nacionalidad",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "nacionalidad",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "tiene_discapacidad",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "tiene_discapacidad",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "sufre_enfermedad_catastrofica",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "sufre_enfermedad_catastrofica",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "estudiante_tiene_trastorno_aprendizaje",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "estudiante_tiene_trastorno_aprendizaje",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "pais_nacimiento",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "pais_nacimiento",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "region_nacimiento",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "region_nacimiento",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "provincia_nacimiento",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "provincia_nacimiento",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "ciudad_nacimiento",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "ciudad_nacimiento",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "parroquia_nacimiento",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "parroquia_nacimiento",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "pais_residencia",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "pais_residencia",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "region_residencia",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "region_residencia",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "provincia_residencia",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "provincia_residencia",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "ciudad_residencia",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "ciudad_residencia",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "parroquia_residencia",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "parroquia_residencia",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "direccion_calle_principal",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "direccion_calle_principal",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "direccion_calle_secundaria",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "direccion_calle_secundaria",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "barrio_sector",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "barrio_sector",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "aud_fecha_adicion",
 									"type": "DateTime",
 									"physicalType": "date"
 								},
 								"sink": {
-									"name": "AUD_FECHA_ADICION",
+									"name": "aud_fecha_adicion",
 									"type": "DateTime",
 									"physicalType": "INT_96"
 								}
 							},
 							{
 								"source": {
-									"name": "AUD_FECHA_MODIFICACION",
+									"name": "aud_fecha_modificacion",
 									"type": "DateTime",
 									"physicalType": "date"
 								},
 								"sink": {
-									"name": "AUD_FECHA_MODIFICACION",
+									"name": "aud_fecha_modificacion",
 									"type": "DateTime",
 									"physicalType": "INT_96"
 								}
