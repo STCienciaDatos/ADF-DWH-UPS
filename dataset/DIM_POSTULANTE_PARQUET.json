@@ -1,0 +1,25 @@
+{
+	"name": "DIM_POSTULANTE_PARQUET",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DIM_POSTULANTES"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "DIM_POSTULANTES.parquet",
+				"folderPath": "vdirectory_dim_postulante",
+				"container": "container-ins-mat"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

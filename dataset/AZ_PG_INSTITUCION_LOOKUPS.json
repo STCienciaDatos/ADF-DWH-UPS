@@ -1,0 +1,102 @@
+{
+	"name": "AZ_PG_INSTITUCION_LOOKUPS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzurePostgreSql1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzurePostgreSqlTable",
+		"schema": [
+			{
+				"name": "id_dim_ins_edu_lookup",
+				"type": "integer",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "codigo_interno_ins_edu",
+				"type": "numeric",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "nombre_institucion_educativa",
+				"type": "character varying",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "categoria_institucion_educativa",
+				"type": "character varying",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "tipo_institucion_educativa",
+				"type": "character varying",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "pais_institucion_educativa",
+				"type": "character varying",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "provincia_institucion_educativa",
+				"type": "character varying",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "ciudad_institucion_educativa",
+				"type": "character varying",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "nivel",
+				"type": "character varying",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "fecha_adicion",
+				"type": "date",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "fecha_modificacion",
+				"type": "date",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "hash",
+				"type": "text",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "fecha_ultima_modificacion",
+				"type": "date",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "linaje",
+				"type": "text",
+				"precision": 0,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "dwh_lookup",
+			"table": "dim_institucion_educativa_lookup"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

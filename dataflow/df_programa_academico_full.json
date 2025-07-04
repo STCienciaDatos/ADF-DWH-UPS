@@ -1,0 +1,118 @@
+{
+	"name": "df_programa_academico_full",
+	"properties": {
+		"folder": {
+			"name": "DF_INSCRIPCIONES_MATRICULAS/DIM_PROGRAMA_ACADEMICO"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DIM_PROGRAMA_ACADEMICO",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DIM_PROGRAMA_ACADEMICO_FINAL",
+						"type": "DatasetReference"
+					},
+					"name": "ParquePrrogramaFinal"
+				}
+			],
+			"transformations": [
+				{
+					"name": "IffNull"
+				},
+				{
+					"name": "HashLinajeActualizacion"
+				},
+				{
+					"name": "aggregate1"
+				},
+				{
+					"name": "definciontipodecampo"
+				},
+				{
+					"name": "Formatos"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          codigo_interno_programa_academico as string,",
+				"          carrera as string,",
+				"          sede as string,",
+				"          campus as string,",
+				"          duracion_en_semestres as integer,",
+				"          duracion_en_anios as decimal(38,18),",
+				"          modalidad as string,",
+				"          tipo_proyecto_educacion as string,",
+				"          proyecto_educacion as string,",
+				"          vigencia_proyecto_educacion as string,",
+				"          aud_fecha_adicion as timestamp,",
+				"          aud_fecha_modificacion as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet',",
+				"     partitionBy('hash', 1)) ~> source1",
+				"source1 derive(codigo_interno_programa_academico = iifNull(codigo_interno_programa_academico, 'SIN DATO'),",
+				"          carrera = iifNull(carrera, 'SIN DATO'),",
+				"          sede = iifNull(sede, 'SIN DATO'),",
+				"          campus = iifNull(campus, 'SIN DATO'),",
+				"          duracion_en_semestres = iifNull(duracion_en_semestres, -1),",
+				"          duracion_en_anios = iifNull(duracion_en_anios, -1),",
+				"          modalidad = iifNull(modalidad, 'SIN DATO'),",
+				"          tipo_proyecto_educacion = iifNull(tipo_proyecto_educacion, 'SIN DATO'),",
+				"          proyecto_educacion = iifNull(proyecto_educacion, 'SIN DATO'),",
+				"          vigencia_proyecto_educacion = iifNull(vigencia_proyecto_educacion, 'SIN DATO'),",
+				"          aud_fecha_adicion = iif(    isNull(aud_fecha_adicion) || toString(aud_fecha_adicion) == '',    toDate('1900-01-01'),    toDate(toString(aud_fecha_adicion, 'yyyy-MM-dd'))),",
+				"          aud_fecha_modificacion = iif(    isNull(aud_fecha_modificacion) || toString(aud_fecha_modificacion) == '',    toDate('1900-01-01'),    toDate(toString(aud_fecha_modificacion, 'yyyy-MM-dd')))) ~> IffNull",
+				"Formatos derive(HASH = md5(concat(codigo_interno_programa_academico,carrera,sede,",
+				"campus,toString(duracion_en_semestres), toString(duracion_en_anios),modalidad,",
+				"tipo_proyecto_educacion,proyecto_educacion,toString(vigencia_proyecto_educacion), ",
+				"toString(aud_fecha_adicion), toString(aud_fecha_modificacion))),",
+				"          FECHA_ULTIMA_ACTUALIZACION = currentTimestamp(),",
+				"          LINAJE = 'ped.ped_tipo_proyecto_educacion , ped.ped_proyecto_educacion, org.org_descripcion_estructura, org.org_estructura, ped.ped_des_est_pro_edu, ped.ped_mod_pro_edu, ped.ped_modalidad, ped.ped_est_mod_pro_edu') ~> HashLinajeActualizacion",
+				"HashLinajeActualizacion aggregate(groupBy(HASH),",
+				"     codigo_interno_programa_academico = max(codigo_interno_programa_academico),",
+				"          carrera = max(carrera),",
+				"          sede = max(sede),",
+				"          campus = max(campus),",
+				"          duracion_en_semestres = max(duracion_en_semestres),",
+				"          duracion_en_anios = max(duracion_en_anios),",
+				"          modalidad = max(modalidad),",
+				"          tipo_proyecto_educacion = max(tipo_proyecto_educacion),",
+				"          proyecto_educacion = max(proyecto_educacion),",
+				"          vigencia_proyecto_educacion = max(vigencia_proyecto_educacion),",
+				"          aud_fecha_adicion = max(aud_fecha_adicion),",
+				"          aud_fecha_modificacion = max(aud_fecha_modificacion),",
+				"          FECHA_ULTIMA_ACTUALIZACION = max(FECHA_ULTIMA_ACTUALIZACION),",
+				"          LINAJE = max(LINAJE)) ~> aggregate1",
+				"aggregate1 cast(output(",
+				"          HASH as string,",
+				"          codigo_interno_programa_academico as string,",
+				"          vigencia_proyecto_educacion as boolean,",
+				"          aud_fecha_adicion as date,",
+				"          aud_fecha_modificacion as date,",
+				"          LINAJE as string",
+				"     ),",
+				"     errors: true) ~> definciontipodecampo",
+				"IffNull derive(duracion_en_anios = toDecimal(duracion_en_anios, 18, 2),",
+				"          vigencia_proyecto_educacion = toBoolean(vigencia_proyecto_educacion)) ~> Formatos",
+				"definciontipodecampo sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     partitionFileNames:['DIM_PROGRAMA_ACADEMICO_FINAL.parquet'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> ParquePrrogramaFinal"
+			]
+		}
+	}
+}

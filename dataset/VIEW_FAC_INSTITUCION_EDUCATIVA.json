@@ -1,0 +1,17 @@
+{
+	"name": "VIEW_FAC_INSTITUCION_EDUCATIVA",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CONNECT_REPLICA_PROD_UPS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "PostgreSqlV2Table",
+		"schema": [],
+		"typeProperties": {
+			"schema": "REPLICA_SCHEMA",
+			"table": "FT_DIM_INS_EDU_PROCEDENCIA"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

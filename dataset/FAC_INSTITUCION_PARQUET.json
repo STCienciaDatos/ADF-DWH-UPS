@@ -1,0 +1,25 @@
+{
+	"name": "FAC_INSTITUCION_PARQUET",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "FAC_INSTITUCION_PROCEDENCIA"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "FAC_INSTITUCION.parquet",
+				"folderPath": "vdirectory_fac_institucion",
+				"container": "container-ins-mat"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

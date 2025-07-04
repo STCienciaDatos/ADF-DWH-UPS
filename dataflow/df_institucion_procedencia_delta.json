@@ -1,0 +1,107 @@
+{
+	"name": "df_institucion_procedencia_delta",
+	"properties": {
+		"folder": {
+			"name": "DF_INSCRIPCIONES_MATRICULAS/FAC_INSTITUCION_PROCEDENCIA"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "FAC_INSTITUCION_PARQUET",
+						"type": "DatasetReference"
+					},
+					"name": "source"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "FAC_INSTITUCION_PARQUET",
+						"type": "DatasetReference"
+					},
+					"name": "sink1",
+					"description": "Export data to DIM_PERIODO_PARQUET"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn"
+				},
+				{
+					"name": "definciontipodecampo"
+				},
+				{
+					"name": "actualizacionycreaciondelhash"
+				},
+				{
+					"name": "verificaciondeduplicados"
+				},
+				{
+					"name": "filter1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          TITULO_BACHILLERATO as string,",
+				"          FECHA_GRADUACION as timestamp,",
+				"          CALIF_GRADUACION as decimal(38,18),",
+				"          CALIF_SOBRE as decimal(38,18),",
+				"          CODIGO_INTERNO_INS_EDU as decimal(38,18),",
+				"          CODIGO_INTERNO_POSTULANTE as decimal(38,18),",
+				"          AUD_FECHA_ADICION as timestamp,",
+				"          AUD_FECHA_MODIFICACION as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> source",
+				"source derive(TITULO_BACHILLERATO = iifNull(TITULO_BACHILLERATO, \"SIN DATO\"),",
+				"          FECHA_GRADUACION = iif(    isNull(FECHA_GRADUACION) || toString(FECHA_GRADUACION) == '',    toDate('1900-01-01'),    toDate(toString(FECHA_GRADUACION, 'yyyy-MM-dd'))),",
+				"          CALIF_GRADUACION = iifNull(CALIF_GRADUACION, -1),",
+				"          CALIF_SOBRE = iifNull(CALIF_SOBRE, -1),",
+				"          CODIGO_INTERNO_INS_EDU = iifNull(CODIGO_INTERNO_INS_EDU, -1),",
+				"          CODIGO_INTERNO_POSTULANTE = iifNull(CODIGO_INTERNO_POSTULANTE, -1),",
+				"          AUD_FECHA_ADICION = iifNull(AUD_FECHA_ADICION, toTimestamp('1900-01-01T00:00:00Z')),",
+				"          AUD_FECHA_MODIFICACION = iif(    isNull(AUD_FECHA_MODIFICACION) || toString(AUD_FECHA_MODIFICACION) == '',    toDate('1900-01-01'),    toDate(toString(AUD_FECHA_MODIFICACION, 'yyyy-MM-dd')))) ~> derivedColumn",
+				"filter1 cast(output(",
+				"          HASH as string,",
+				"          TITULO_BACHILLERATO as string,",
+				"          FECHA_GRADUACION as date,",
+				"          CALIF_GRADUACION as integer,",
+				"          CALIF_SOBRE as integer,",
+				"          CODIGO_INTERNO_INS_EDU as integer,",
+				"          CODIGO_INTERNO_POSTULANTE as integer,",
+				"          AUD_FECHA_ADICION as date,",
+				"          AUD_FECHA_MODIFICACION as date,",
+				"          FECHA_ULTIMA_ACTUALIZACION as date,",
+				"          LINAJE as string",
+				"     ),",
+				"     errors: true) ~> definciontipodecampo",
+				"derivedColumn derive(HASH = md5(concat(toString(TITULO_BACHILLERATO), TITULO_BACHILLERATO, toString(CALIF_GRADUACION), toString(CALIF_SOBRE), toString(CODIGO_INTERNO_INS_EDU), toString(CODIGO_INTERNO_POSTULANTE), toString(CODIGO_INTERNO_POSTULANTE), toString(AUD_FECHA_ADICION))),",
+				"          FECHA_ULTIMA_ACTUALIZACION = currentTimestamp(),",
+				"          LINAJE = 'ins_alumno, cliente_local, ins_raza, ins_estado_civil') ~> actualizacionycreaciondelhash",
+				"actualizacionycreaciondelhash aggregate(groupBy(HASH),",
+				"     TITULO_BACHILLERATO = max(TITULO_BACHILLERATO),",
+				"          FECHA_GRADUACION = max(FECHA_GRADUACION),",
+				"          CALIF_GRADUACION = max(CALIF_GRADUACION),",
+				"          CALIF_SOBRE = max(CALIF_SOBRE),",
+				"          CODIGO_INTERNO_INS_EDU = max(CODIGO_INTERNO_INS_EDU),",
+				"          CODIGO_INTERNO_POSTULANTE = max(CODIGO_INTERNO_POSTULANTE),",
+				"          AUD_FECHA_ADICION = max(AUD_FECHA_ADICION),",
+				"          AUD_FECHA_MODIFICACION = max(AUD_FECHA_MODIFICACION),",
+				"          FECHA_ULTIMA_ACTUALIZACION = max(FECHA_ULTIMA_ACTUALIZACION),",
+				"          LINAJE = max(LINAJE)) ~> verificaciondeduplicados",
+				"verificaciondeduplicados filter(AUD_FECHA_ADICION == FECHA_ULTIMA_ACTUALIZACION) ~> filter1",
+				"definciontipodecampo sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     partitionFileNames:['FAC_INSTITUCION_FINAL.parquet'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}

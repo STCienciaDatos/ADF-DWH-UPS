@@ -1,0 +1,6 @@
+{
+	"name": "IntegrationRuntimeCD",
+	"properties": {
+		"type": "SelfHosted"
+	}
+}

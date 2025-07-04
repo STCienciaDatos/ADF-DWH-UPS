@@ -1,0 +1,82 @@
+{
+	"name": "DIM_POSTULANTE_PARQUET_FINAL",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DIM_POSTULANTES"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "POSTULANTES_FINAL.parquet",
+				"folderPath": "vdirectory_dim_postulante",
+				"container": "container-ins-mat"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "Hash",
+				"type": "UTF8"
+			},
+			{
+				"name": "PK_PERSONA",
+				"type": "INT32"
+			},
+			{
+				"name": "TIPO_IDENTIFICACION_PERSONA",
+				"type": "UTF8"
+			},
+			{
+				"name": "NOMBRES_PERSONA",
+				"type": "UTF8"
+			},
+			{
+				"name": "PRIMER_APELLIDO_PERSONA",
+				"type": "UTF8"
+			},
+			{
+				"name": "SEGUNDO_APELLIDO_PERSONA",
+				"type": "UTF8"
+			},
+			{
+				"name": "CORREO_PERSONA",
+				"type": "UTF8"
+			},
+			{
+				"name": "TELEFONO_PERSONA",
+				"type": "UTF8"
+			},
+			{
+				"name": "GENERO_PERSONA",
+				"type": "UTF8"
+			},
+			{
+				"name": "INDICADOR_EXTRANJERO_PERSONA",
+				"type": "UTF8"
+			},
+			{
+				"name": "INDICADOR_DISCAPACIDAD_PERSONA",
+				"type": "UTF8"
+			},
+			{
+				"name": "TIPO_DISCAPACIDAD_PERSONA",
+				"type": "UTF8"
+			},
+			{
+				"name": "FECHA_NACIMIENTO_PERSONA",
+				"type": "INT96"
+			},
+			{
+				"name": "DateUpdate",
+				"type": "INT96"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

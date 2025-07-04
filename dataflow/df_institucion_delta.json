@@ -1,0 +1,115 @@
+{
+	"name": "df_institucion_delta",
+	"properties": {
+		"folder": {
+			"name": "DF_INSCRIPCIONES_MATRICULAS/DIM_INSTITUCION_EDUCATIVA"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DIM_INSTITUCION_PARQUET",
+						"type": "DatasetReference"
+					},
+					"name": "source"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DIM_INSTITUCION_PARQUET",
+						"type": "DatasetReference"
+					},
+					"name": "sink1",
+					"description": "Export data to DIM_PERIODO_PARQUET"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn"
+				},
+				{
+					"name": "definciontipodecampo"
+				},
+				{
+					"name": "actualizacionycreaciondelhash"
+				},
+				{
+					"name": "verificaciondeduplicados"
+				},
+				{
+					"name": "filter1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          CODIGO_INTERNO_INS_EDU as decimal(38,18),",
+				"          INSTITUCION_EDUCATIVA as string,",
+				"          CATEGORIA_INSTITUCION as string,",
+				"          TIPO_INSTITUCION as string,",
+				"          PAIS_INS_EDU as string,",
+				"          PROVINCIA_INS_EDU as string,",
+				"          CIUDAD_INS_EDU as string,",
+				"          NIVEL_INS_EDU as string,",
+				"          AUD_FECHA_ADICION as timestamp,",
+				"          AUD_FECHA_MODIFICACION as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> source",
+				"source derive(CODIGO_INTERNO_INS_EDU = iifNull(CODIGO_INTERNO_INS_EDU, -1),",
+				"          INSTITUCION_EDUCATIVA = iifNull(INSTITUCION_EDUCATIVA, \"SIN DATO\"),",
+				"          CATEGORIA_INSTITUCION = iifNull(CATEGORIA_INSTITUCION, \"SIN DATO\"),",
+				"          TIPO_INSTITUCION = iifNull(TIPO_INSTITUCION, \"SIN DATO\"),",
+				"          PAIS_INS_EDU = iifNull(PAIS_INS_EDU, \"SIN DATO\"),",
+				"          PROVINCIA_INS_EDU = iifNull(PROVINCIA_INS_EDU, \"SIN DATO\"),",
+				"          CIUDAD_INS_EDU = iifNull(CIUDAD_INS_EDU, \"SIN DATO\"),",
+				"          NIVEL_INS_EDU = iifNull(NIVEL_INS_EDU, \"SIN DATO\"),",
+				"          AUD_FECHA_ADICION = iifNull(AUD_FECHA_ADICION, toTimestamp('1900-01-01T00:00:00Z')),",
+				"          AUD_FECHA_MODIFICACION = iif(    isNull(AUD_FECHA_MODIFICACION) || toString(AUD_FECHA_MODIFICACION) == '',    toDate('1900-01-01'),    toDate(toString(AUD_FECHA_MODIFICACION, 'yyyy-MM-dd')))) ~> derivedColumn",
+				"filter1 cast(output(",
+				"          HASH as string,",
+				"          CODIGO_INTERNO_INS_EDU as integer,",
+				"          INSTITUCION_EDUCATIVA as string,",
+				"          CATEGORIA_INSTITUCION as string,",
+				"          TIPO_INSTITUCION as string,",
+				"          PAIS_INS_EDU as string,",
+				"          PROVINCIA_INS_EDU as string,",
+				"          CIUDAD_INS_EDU as string,",
+				"          NIVEL_INS_EDU as string,",
+				"          AUD_FECHA_ADICION as date,",
+				"          AUD_FECHA_MODIFICACION as date,",
+				"          FECHA_ULTIMA_ACTUALIZACION as date,",
+				"          LINAJE as string",
+				"     ),",
+				"     errors: true) ~> definciontipodecampo",
+				"derivedColumn derive(HASH = md5(concat(toString(CODIGO_INTERNO_INS_EDU), INSTITUCION_EDUCATIVA, CATEGORIA_INSTITUCION, toString(TIPO_INSTITUCION), toString(PAIS_INS_EDU), toString(PROVINCIA_INS_EDU), toString(PROVINCIA_INS_EDU), CIUDAD_INS_EDU, toString(NIVEL_INS_EDU), toString(AUD_FECHA_ADICION))),",
+				"          FECHA_ULTIMA_ACTUALIZACION = currentTimestamp(),",
+				"          LINAJE = 'ins_alumno, cliente_local, ins_raza, ins_estado_civil') ~> actualizacionycreaciondelhash",
+				"actualizacionycreaciondelhash aggregate(groupBy(HASH),",
+				"     CODIGO_INTERNO_INS_EDU = max(CODIGO_INTERNO_INS_EDU),",
+				"          INSTITUCION_EDUCATIVA = max(INSTITUCION_EDUCATIVA),",
+				"          CATEGORIA_INSTITUCION = max(CATEGORIA_INSTITUCION),",
+				"          TIPO_INSTITUCION = max(TIPO_INSTITUCION),",
+				"          PAIS_INS_EDU = max(PAIS_INS_EDU),",
+				"          PROVINCIA_INS_EDU = max(PROVINCIA_INS_EDU),",
+				"          CIUDAD_INS_EDU = max(PROVINCIA_INS_EDU),",
+				"          NIVEL_INS_EDU = max(NIVEL_INS_EDU),",
+				"          AUD_FECHA_ADICION = max(AUD_FECHA_ADICION),",
+				"          AUD_FECHA_MODIFICACION = max(AUD_FECHA_MODIFICACION),",
+				"          FECHA_ULTIMA_ACTUALIZACION = max(FECHA_ULTIMA_ACTUALIZACION),",
+				"          LINAJE = max(LINAJE)) ~> verificaciondeduplicados",
+				"verificaciondeduplicados filter(AUD_FECHA_ADICION== FECHA_ULTIMA_ACTUALIZACION) ~> filter1",
+				"definciontipodecampo sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     partitionFileNames:['DIM_INSTITUCION_FINAL.parquet'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}

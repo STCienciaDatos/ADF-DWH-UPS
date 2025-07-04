@@ -1,0 +1,117 @@
+{
+	"name": "AZ_PG_PROGRAMA_ACADEMICO_LOOUKPS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzurePostgreSql1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "SRV_LOOKUP_CONNECTION"
+		},
+		"annotations": [],
+		"type": "AzurePostgreSqlTable",
+		"schema": [
+			{
+				"name": "id_dim_programa_academico_lookup",
+				"type": "integer",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "codigo_interno_programa_academico",
+				"type": "character varying",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "nombre_programa_academico",
+				"type": "character varying",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "sede_programa_academico",
+				"type": "character varying",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "campus_extension_programa_academico",
+				"type": "character varying",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "duracion_programa_semestres",
+				"type": "numeric",
+				"precision": 5,
+				"scale": 0
+			},
+			{
+				"name": "duracion_programa_anio",
+				"type": "numeric",
+				"precision": 5,
+				"scale": 0
+			},
+			{
+				"name": "modalidad_programa_academico",
+				"type": "character varying",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "tipo_proyecto_educacion",
+				"type": "character varying",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "proyecto_educacion",
+				"type": "character varying",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "vigencia_proyecto_educacion",
+				"type": "boolean",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "fecha_adicion",
+				"type": "date",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "fecha_modificacion",
+				"type": "date",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "hash",
+				"type": "text",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "fecha_ultima_modificacion",
+				"type": "date",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "linaje",
+				"type": "text",
+				"precision": 0,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "dwh_lookup",
+			"table": "dim_programa_academico_lookup"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,160 @@
+{
+	"name": "df_postulantes_delta",
+	"properties": {
+		"folder": {
+			"name": "DF_INSCRIPCIONES_MATRICULAS/DIM_POSTULANTES"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DIM_POSTULANTE_PARQUET",
+						"type": "DatasetReference"
+					},
+					"name": "source"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DIM_POSTULANTE_PARQUET",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "updatenullvaluesformat"
+				},
+				{
+					"name": "vericacionduplicados"
+				},
+				{
+					"name": "definciontipodecampo"
+				},
+				{
+					"name": "updatecreatehash"
+				},
+				{
+					"name": "filter1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          IDENTIFICACION_POSTULANTE as string,",
+				"          TIPO_IDENTIFICACION_POSTULANTE as string,",
+				"          NOMBRES_POSTULANTE as string,",
+				"          APELLIDOS_POSTULANTE as string,",
+				"          CORREO_PERSONAL_POSTULANTE as string,",
+				"          CORREO_INSTITUCIONAL_POSTULANTE as string,",
+				"          TELEFONO_POSTULANTE as string,",
+				"          CELULAR_POSTULANTE as string,",
+				"          GENERO_POSTULANTE as string,",
+				"          ETNIA_POSTULANTE as string,",
+				"          FECHA_NACIMIENTO_POSTULANTE as timestamp,",
+				"          INDICADOR_EXTRANJERO_POSTULANTE as string,",
+				"          CODIGO_INTERNO_POSTULANTE as integer,",
+				"          AUD_FECHA_ADICION as timestamp,",
+				"          AUD_FECHA_MODIFICACION as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> source",
+				"source derive(IDENTIFICACION_POSTULANTE = iifNull(IDENTIFICACION_POSTULANTE, 'SIN DATO'),",
+				"          TIPO_IDENTIFICACION_POSTULANTE = iifNull(TIPO_IDENTIFICACION_POSTULANTE, 'SIN DATO'),",
+				"          NOMBRES_POSTULANTE = iifNull(NOMBRES_POSTULANTE, 'SIN DATO'),",
+				"          APELLIDOS_POSTULANTE = iifNull(APELLIDOS_POSTULANTE, 'SIN DATO'),",
+				"          CORREO_PERSONAL_POSTULANTE = iifNull(CORREO_PERSONAL_POSTULANTE, 'SIN DATO'),",
+				"          CORREO_INSTITUCIONAL_POSTULANTE = iifNull(CORREO_INSTITUCIONAL_POSTULANTE, 'SIN DATO'),",
+				"          TELEFONO_POSTULANTE = iifNull(TELEFONO_POSTULANTE, 'SIN DATO'),",
+				"          CELULAR_POSTULANTE = iifNull(CELULAR_POSTULANTE, 'SIN DATO'),",
+				"          GENERO_POSTULANTE = iifNull(GENERO_POSTULANTE, 'SIN DATO'),",
+				"          ETNIA_POSTULANTE = iifNull(ETNIA_POSTULANTE,'SIN DATO'),",
+				"          FECHA_NACIMIENTO_POSTULANTE = iif(",
+				"    isNull(FECHA_NACIMIENTO_POSTULANTE) || toString(FECHA_NACIMIENTO_POSTULANTE) == '',",
+				"    toDate('1900-01-01'),",
+				"    toDate(toString(FECHA_NACIMIENTO_POSTULANTE, 'yyyy-MM-dd'))",
+				"),",
+				"          INDICADOR_EXTRANJERO_POSTULANTE = iifNull(INDICADOR_EXTRANJERO_POSTULANTE, 'SIN DATO'),",
+				"          CODIGO_INTERNO_POSTULANTE = iifNull(CODIGO_INTERNO_POSTULANTE, -1),",
+				"          AUD_FECHA_ADICION = iif(",
+				"    isNull(AUD_FECHA_ADICION) || toString(AUD_FECHA_ADICION) == '',",
+				"    toDate('1900-01-01'),",
+				"    toDate(toString(AUD_FECHA_ADICION, 'yyyy-MM-dd'))",
+				"),",
+				"          AUD_FECHA_MODIFICACION = iif(",
+				"    isNull(AUD_FECHA_MODIFICACION) || toString(AUD_FECHA_MODIFICACION) == '',",
+				"    toDate('1900-01-01'),",
+				"    toDate(toString(AUD_FECHA_MODIFICACION, 'yyyy-MM-dd'))",
+				")) ~> updatenullvaluesformat",
+				"updatecreatehash aggregate(groupBy(HASH),",
+				"     IDENTIFICACION_POSTULANTE = max(IDENTIFICACION_POSTULANTE),",
+				"          TIPO_IDENTIFICACION_POSTULANTE = max(TIPO_IDENTIFICACION_POSTULANTE),",
+				"          NOMBRES_POSTULANTE = max(NOMBRES_POSTULANTE),",
+				"          APELLIDOS_POSTULANTE = max(APELLIDOS_POSTULANTE),",
+				"          CORREO_PERSONAL_POSTULANTE = max(CORREO_PERSONAL_POSTULANTE),",
+				"          CORREO_INSTITUCIONAL_POSTULANTE = max(CORREO_INSTITUCIONAL_POSTULANTE),",
+				"          TELEFONO_POSTULANTE = max(TELEFONO_POSTULANTE),",
+				"          CELULAR_POSTULANTE = max(CELULAR_POSTULANTE),",
+				"          GENERO_POSTULANTE = max(GENERO_POSTULANTE),",
+				"          ETNIA_POSTULANTE = max(ETNIA_POSTULANTE),",
+				"          FECHA_NACIMIENTO_POSTULANTE = max(FECHA_NACIMIENTO_POSTULANTE),",
+				"          INDICADOR_EXTRANJERO_POSTULANTE = max(INDICADOR_EXTRANJERO_POSTULANTE),",
+				"          CODIGO_INTERNO_POSTULANTE = max(CODIGO_INTERNO_POSTULANTE),",
+				"          FECHA_ULTIMA_ACTUALIZACION_DW = max(FECHA_ULTIMA_ACTUALIZACION_DW),",
+				"          LINAJE = max(LINAJE),",
+				"          AUD_FECHA_ADICION = max(AUD_FECHA_ADICION),",
+				"          AUD_FECHA_MODIFICACION = max(AUD_FECHA_MODIFICACION)) ~> vericacionduplicados",
+				"filter1 cast(output(",
+				"          HASH as string,",
+				"          IDENTIFICACION_POSTULANTE as string,",
+				"          TIPO_IDENTIFICACION_POSTULANTE as string,",
+				"          NOMBRES_POSTULANTE as string,",
+				"          APELLIDOS_POSTULANTE as string,",
+				"          CORREO_PERSONAL_POSTULANTE as string,",
+				"          CORREO_INSTITUCIONAL_POSTULANTE as string,",
+				"          TELEFONO_POSTULANTE as string,",
+				"          CELULAR_POSTULANTE as string,",
+				"          GENERO_POSTULANTE as string,",
+				"          ETNIA_POSTULANTE as string,",
+				"          FECHA_NACIMIENTO_POSTULANTE as date,",
+				"          INDICADOR_EXTRANJERO_POSTULANTE as boolean,",
+				"          CODIGO_INTERNO_POSTULANTE as integer,",
+				"          FECHA_ULTIMA_ACTUALIZACION_DW as date,",
+				"          LINAJE as string,",
+				"          AUD_FECHA_ADICION as date,",
+				"          AUD_FECHA_MODIFICACION as date",
+				"     ),",
+				"     errors: true) ~> definciontipodecampo",
+				"updatenullvaluesformat derive(HASH = md5(concat(IDENTIFICACION_POSTULANTE,",
+				"TIPO_IDENTIFICACION_POSTULANTE,",
+				"NOMBRES_POSTULANTE,",
+				"APELLIDOS_POSTULANTE,",
+				"CORREO_PERSONAL_POSTULANTE,",
+				"CORREO_INSTITUCIONAL_POSTULANTE,",
+				"TELEFONO_POSTULANTE,",
+				"CELULAR_POSTULANTE,",
+				"GENERO_POSTULANTE,",
+				"ETNIA_POSTULANTE,",
+				"toString(FECHA_NACIMIENTO_POSTULANTE),",
+				"INDICADOR_EXTRANJERO_POSTULANTE,",
+				"toString(CODIGO_INTERNO_POSTULANTE),",
+				"toString(AUD_FECHA_ADICION),",
+				"toString(AUD_FECHA_MODIFICACION))),",
+				"          FECHA_ULTIMA_ACTUALIZACION_DW = toDate(currentTimestamp()),",
+				"          LINAJE = 'ins_alumno, cliente_local') ~> updatecreatehash",
+				"vericacionduplicados filter(AUD_FECHA_ADICION == FECHA_ULTIMA_ACTUALIZACION_DW) ~> filter1",
+				"definciontipodecampo sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     partitionFileNames:['POSTULANTES_FINAL.parquet'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}

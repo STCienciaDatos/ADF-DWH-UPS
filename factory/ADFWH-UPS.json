@@ -1,0 +1,9 @@
+{
+	"name": "ADFWH-UPS",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "b00c9890-d88c-4b60-a679-07c21ac8c32d",
+		"tenantId": "d6438082-eb98-4c3f-8397-5dbdfe4036fd"
+	}
+}

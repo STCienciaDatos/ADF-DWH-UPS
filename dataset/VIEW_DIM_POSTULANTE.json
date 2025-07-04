@@ -1,0 +1,20 @@
+{
+	"name": "VIEW_DIM_POSTULANTE",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CONNECT_REPLICA_PROD_UPS",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "SRV_MIRROR"
+		},
+		"annotations": [],
+		"type": "PostgreSqlV2Table",
+		"schema": [],
+		"typeProperties": {
+			"schema": "REPLICA_SCHEMA",
+			"table": "VIEW_DIM_POSTULANTE_ALUMNO"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

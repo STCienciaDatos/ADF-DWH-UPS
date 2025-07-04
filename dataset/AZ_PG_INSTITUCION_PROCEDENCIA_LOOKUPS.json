@@ -1,0 +1,90 @@
+{
+	"name": "AZ_PG_INSTITUCION_PROCEDENCIA_LOOKUPS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzurePostgreSql1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzurePostgreSqlTable",
+		"schema": [
+			{
+				"name": "id_fact_ins_edu_procedencia_lookup",
+				"type": "integer",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "titulo_bachillerato",
+				"type": "character varying",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "fecha_graduacion",
+				"type": "date",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "calificacion_graduacion",
+				"type": "numeric",
+				"precision": 5,
+				"scale": 2
+			},
+			{
+				"name": "calificacion_sobre",
+				"type": "numeric",
+				"precision": 3,
+				"scale": 0
+			},
+			{
+				"name": "codigo_interno_ins_edu_fk",
+				"type": "numeric",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "codigo_interno_pos_alu_fk",
+				"type": "numeric",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "fecha_adicion",
+				"type": "date",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "fecha_modificacion",
+				"type": "date",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "hash",
+				"type": "text",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "fecha_ultima_modificacion",
+				"type": "date",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "linaje",
+				"type": "text",
+				"precision": 0,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "dwh_lookup",
+			"table": "fact_institucion_educativa_procedencia_lookup"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

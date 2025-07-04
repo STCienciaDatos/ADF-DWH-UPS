@@ -1,0 +1,111 @@
+{
+	"name": "AZ_PG_POSTULANTE_ALUMNO_LOOKUPS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzurePostgreSql1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "SRV_LOOKUP_CONNECTION"
+		},
+		"annotations": [],
+		"type": "AzurePostgreSqlTable",
+		"schema": [
+			{
+				"name": "sk_persona",
+				"type": "integer",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "pk_persona",
+				"type": "integer",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "tipo_identificacion_persona",
+				"type": "text",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "nombres_persona",
+				"type": "text",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "primer_apellido_persona",
+				"type": "text",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "segundo_apellido_persona",
+				"type": "text",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "correo_persona",
+				"type": "text",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "telefono_persona",
+				"type": "text",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "genero_persona",
+				"type": "text",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "indicador_extranjero_persona",
+				"type": "boolean",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "indicador_discapacidad_persona",
+				"type": "boolean",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "tipo_discapacidad_persona",
+				"type": "text",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "fecha_nacimiento_persona",
+				"type": "date",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "dateupdate",
+				"type": "timestamp without time zone",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "hash",
+				"type": "text",
+				"precision": 0,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "dwh_lookup",
+			"table": "dim_postulante_alumno_lookup"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
