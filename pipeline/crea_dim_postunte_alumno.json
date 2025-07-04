@@ -13,10 +13,20 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": [],
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "dwh_lookup.dim_postulante_alumno_lookup"
+					},
+					{
+						"name": "Destination",
+						"value": "dwh_ups.dim_postulante_alumno"
+					}
+				],
 				"typeProperties": {
 					"source": {
 						"type": "AzurePostgreSqlSource",
+						"query": "SELECT DISTINCT ON (codigo_interno_pos_alu)\n    codigo_interno_pos_alu,\n    tipo_identificacion,\n    nro_identificacion,\n    nombres,\n    apellidos,\n    correo_personal,\n    correo_institucional,\n    genero,\n    etnia,\n    estado_civil,\n    fecha_nacimiento,\n    telefono,\n    celular,\n    indicador_extranjero,\n    nacionalidad,\n    indicador_discapacidad,\n    indicador_enfermedad_catastrofica,\n    indicador_nec_esp_aprendizaje,\n    fecha_adicion,\n    fecha_modificacion,\n    pais_nacimiento,\n    region_nacimiento,\n    provincia_nacimiento,\n    ciudad_nacimiento,\n    parroquia_nacimiento,\n    pais_residencia,\n    region_residencia,\n    provincia_residencia,\n    ciudad_residencia,\n    parroquia_residencia,\n    direccion_calle_principal,\n    direccion_calle_secundaria,\n    barrio_sector,\n    hash,\n    fecha_ultima_modificacion,\n    linaje\nFROM dwh_lookup.dim_postulante_alumno_lookup\nORDER BY codigo_interno_pos_alu, fecha_ultima_modificacion DESC;",
 						"partitionOption": "None",
 						"queryTimeout": "02:00:00"
 					},
@@ -29,6 +39,404 @@
 					"enableStaging": false,
 					"translator": {
 						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "codigo_interno_pos_alu",
+									"type": "Decimal",
+									"physicalType": "numeric"
+								},
+								"sink": {
+									"name": "codigo_interno_pos_alu",
+									"type": "Decimal",
+									"physicalType": "numeric"
+								}
+							},
+							{
+								"source": {
+									"name": "tipo_identificacion",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "tipo_identificacion",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "nro_identificacion",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "nro_identificacion",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "nombres",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "nombres",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "apellidos",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "apellidos",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "correo_personal",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "correo_personal",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "correo_institucional",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "correo_institucional",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "genero",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "genero",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "etnia",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "etnia",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "estado_civil",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "estado_civil",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "fecha_nacimiento",
+									"type": "DateTime",
+									"physicalType": "date"
+								},
+								"sink": {
+									"name": "fecha_nacimiento",
+									"type": "DateTime",
+									"physicalType": "date"
+								}
+							},
+							{
+								"source": {
+									"name": "telefono",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "telefono",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "celular",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "celular",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "indicador_extranjero",
+									"type": "Boolean",
+									"physicalType": "boolean"
+								},
+								"sink": {
+									"name": "indicador_extranjero",
+									"type": "Boolean",
+									"physicalType": "boolean"
+								}
+							},
+							{
+								"source": {
+									"name": "nacionalidad",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "nacionalidad",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "indicador_discapacidad",
+									"type": "Boolean",
+									"physicalType": "boolean"
+								},
+								"sink": {
+									"name": "indicador_discapacidad",
+									"type": "Boolean",
+									"physicalType": "boolean"
+								}
+							},
+							{
+								"source": {
+									"name": "indicador_enfermedad_catastrofica",
+									"type": "Boolean",
+									"physicalType": "boolean"
+								},
+								"sink": {
+									"name": "indicador_enfermedad_catastrofica",
+									"type": "Boolean",
+									"physicalType": "boolean"
+								}
+							},
+							{
+								"source": {
+									"name": "indicador_nec_esp_aprendizaje",
+									"type": "Boolean",
+									"physicalType": "boolean"
+								},
+								"sink": {
+									"name": "indicador_nec_esp_aprendizaje",
+									"type": "Boolean",
+									"physicalType": "boolean"
+								}
+							},
+							{
+								"source": {
+									"name": "fecha_adicion",
+									"type": "DateTime",
+									"physicalType": "date"
+								},
+								"sink": {
+									"name": "fecha_adicion",
+									"type": "DateTime",
+									"physicalType": "date"
+								}
+							},
+							{
+								"source": {
+									"name": "fecha_modificacion",
+									"type": "DateTime",
+									"physicalType": "date"
+								},
+								"sink": {
+									"name": "fecha_modificacion",
+									"type": "DateTime",
+									"physicalType": "date"
+								}
+							},
+							{
+								"source": {
+									"name": "pais_nacimiento",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "pais_nacimiento",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "region_nacimiento",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "region_nacimiento",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "provincia_nacimiento",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "provincia_nacimiento",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "ciudad_nacimiento",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "ciudad_nacimiento",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "parroquia_nacimiento",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "parroquia_nacimiento",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "pais_residencia",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "pais_residencia",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "region_residencia",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "region_residencia",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "provincia_residencia",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "provincia_residencia",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "ciudad_residencia",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "ciudad_residencia",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "parroquia_residencia",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "parroquia_residencia",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "direccion_calle_principal",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "direccion_calle_principal",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "direccion_calle_secundaria",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "direccion_calle_secundaria",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "barrio_sector",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "barrio_sector",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							}
+						],
 						"typeConversion": true,
 						"typeConversionSettings": {
 							"allowDataTruncation": true,
