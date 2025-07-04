@@ -1,0 +1,1043 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "ADFWH-UPS"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
+		},
+		"AzurePostgreSql1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzurePostgreSql1'"
+		},
+		"AzurePostgreSql2_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'AzurePostgreSql2'"
+		},
+		"CONNECT_REPLICA_PROD_UPS_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'CONNECT_REPLICA_PROD_UPS'"
+		},
+		"AzurePostgreSql2_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "db-dataups.postgres.database.azure.com"
+		},
+		"AzurePostgreSql2_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "postgres"
+		},
+		"AzurePostgreSql2_properties_typeProperties_username": {
+			"type": "string",
+			"defaultValue": "sysadmin"
+		},
+		"CONNECT_REPLICA_PROD_UPS_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "localhost"
+		},
+		"CONNECT_REPLICA_PROD_UPS_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "db_replicaprod_fdw"
+		},
+		"CONNECT_REPLICA_PROD_UPS_properties_typeProperties_username": {
+			"type": "string",
+			"defaultValue": "postgres"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureBlobStorage1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzurePostgreSql1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzurePostgreSql",
+				"version": "1.0",
+				"typeProperties": {
+					"connectionString": "[parameters('AzurePostgreSql1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzurePostgreSql2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzurePostgreSql",
+				"version": "2.0",
+				"typeProperties": {
+					"server": "[parameters('AzurePostgreSql2_properties_typeProperties_server')]",
+					"port": "5432",
+					"database": "[parameters('AzurePostgreSql2_properties_typeProperties_database')]",
+					"sslMode": 2,
+					"username": "[parameters('AzurePostgreSql2_properties_typeProperties_username')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('AzurePostgreSql2_password')]"
+					},
+					"authenticationType": "Basic"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/IntegrationRuntimeCD')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AZ_PG_INSTITUCION_LOOKUPS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzurePostgreSql1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzurePostgreSqlTable",
+				"schema": [
+					{
+						"name": "id_dim_ins_edu_lookup",
+						"type": "integer",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "codigo_interno_ins_edu",
+						"type": "numeric",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "nombre_institucion_educativa",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "categoria_institucion_educativa",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "tipo_institucion_educativa",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "pais_institucion_educativa",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "provincia_institucion_educativa",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "ciudad_institucion_educativa",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "nivel",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "fecha_adicion",
+						"type": "date",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "fecha_modificacion",
+						"type": "date",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "hash",
+						"type": "text",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "fecha_ultima_modificacion",
+						"type": "date",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "linaje",
+						"type": "text",
+						"precision": 0,
+						"scale": 0
+					}
+				],
+				"typeProperties": {
+					"schema": "dwh_lookup",
+					"table": "dim_institucion_educativa_lookup"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AZ_PG_INSTITUCION_PROCEDENCIA_LOOKUPS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzurePostgreSql1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzurePostgreSqlTable",
+				"schema": [
+					{
+						"name": "id_fact_ins_edu_procedencia_lookup",
+						"type": "integer",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "titulo_bachillerato",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "fecha_graduacion",
+						"type": "date",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "calificacion_graduacion",
+						"type": "numeric",
+						"precision": 5,
+						"scale": 2
+					},
+					{
+						"name": "calificacion_sobre",
+						"type": "numeric",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "codigo_interno_ins_edu_fk",
+						"type": "numeric",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "codigo_interno_pos_alu_fk",
+						"type": "numeric",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "fecha_adicion",
+						"type": "date",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "fecha_modificacion",
+						"type": "date",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "hash",
+						"type": "text",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "fecha_ultima_modificacion",
+						"type": "date",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "linaje",
+						"type": "text",
+						"precision": 0,
+						"scale": 0
+					}
+				],
+				"typeProperties": {
+					"schema": "dwh_lookup",
+					"table": "fact_institucion_educativa_procedencia_lookup"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AZ_PG_PERIODO_LOOKUPS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzurePostgreSql1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "SRV_LOOKUP_CONNECTION"
+				},
+				"annotations": [],
+				"type": "AzurePostgreSqlTable",
+				"schema": [
+					{
+						"name": "sk_persona",
+						"type": "integer",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "pk_persona",
+						"type": "integer",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "tipo_identificacion_persona",
+						"type": "text",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "nombres_persona",
+						"type": "text",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "primer_apellido_persona",
+						"type": "text",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "segundo_apellido_persona",
+						"type": "text",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "correo_persona",
+						"type": "text",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "telefono_persona",
+						"type": "text",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "genero_persona",
+						"type": "text",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "indicador_extranjero_persona",
+						"type": "boolean",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "indicador_discapacidad_persona",
+						"type": "boolean",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "tipo_discapacidad_persona",
+						"type": "text",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "fecha_nacimiento_persona",
+						"type": "date",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "dateupdate",
+						"type": "timestamp without time zone",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "hash",
+						"type": "text",
+						"precision": 0,
+						"scale": 0
+					}
+				],
+				"typeProperties": {
+					"schema": "dwh_lookup",
+					"table": "dim_periodo_lookup"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AZ_PG_POSTULANTE_ALUMNO_LOOKUPS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzurePostgreSql1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "SRV_LOOKUP_CONNECTION"
+				},
+				"annotations": [],
+				"type": "AzurePostgreSqlTable",
+				"schema": [
+					{
+						"name": "sk_persona",
+						"type": "integer",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "pk_persona",
+						"type": "integer",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "tipo_identificacion_persona",
+						"type": "text",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "nombres_persona",
+						"type": "text",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "primer_apellido_persona",
+						"type": "text",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "segundo_apellido_persona",
+						"type": "text",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "correo_persona",
+						"type": "text",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "telefono_persona",
+						"type": "text",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "genero_persona",
+						"type": "text",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "indicador_extranjero_persona",
+						"type": "boolean",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "indicador_discapacidad_persona",
+						"type": "boolean",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "tipo_discapacidad_persona",
+						"type": "text",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "fecha_nacimiento_persona",
+						"type": "date",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "dateupdate",
+						"type": "timestamp without time zone",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "hash",
+						"type": "text",
+						"precision": 0,
+						"scale": 0
+					}
+				],
+				"typeProperties": {
+					"schema": "dwh_lookup",
+					"table": "dim_postulante_alumno_lookup"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AZ_PG_PROGRAMA_ACADEMICO_LOOUKPS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzurePostgreSql1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "SRV_LOOKUP_CONNECTION"
+				},
+				"annotations": [],
+				"type": "AzurePostgreSqlTable",
+				"schema": [
+					{
+						"name": "id_dim_programa_academico_lookup",
+						"type": "integer",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "codigo_interno_programa_academico",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "nombre_programa_academico",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "sede_programa_academico",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "campus_extension_programa_academico",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "duracion_programa_semestres",
+						"type": "numeric",
+						"precision": 5,
+						"scale": 0
+					},
+					{
+						"name": "duracion_programa_anio",
+						"type": "numeric",
+						"precision": 5,
+						"scale": 0
+					},
+					{
+						"name": "modalidad_programa_academico",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "tipo_proyecto_educacion",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "proyecto_educacion",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "vigencia_proyecto_educacion",
+						"type": "boolean",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "fecha_adicion",
+						"type": "date",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "fecha_modificacion",
+						"type": "date",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "hash",
+						"type": "text",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "fecha_ultima_modificacion",
+						"type": "date",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "linaje",
+						"type": "text",
+						"precision": 0,
+						"scale": 0
+					}
+				],
+				"typeProperties": {
+					"schema": "dwh_lookup",
+					"table": "dim_programa_academico_lookup"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzurePostgreSql1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DIM_INSTITUCION_FINAL')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DIM_INSTITUCIÓN_EDUCATIVA"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "DIM_INSTITUCION_FINAL.parquet",
+						"folderPath": "vdirectory_dim_institucion",
+						"container": "container-ins-mat"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DIM_INSTITUCION_PARQUET')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DIM_INSTITUCIÓN_EDUCATIVA"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "DIM_INSTITUCION.parquet",
+						"folderPath": "vdirectory_dim_institucion",
+						"container": "container-ins-mat"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DIM_PERIODO_FINAL')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DIM_PERIODO"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "DIM_PERIODO_FINAL.parquet",
+						"folderPath": "vdirectory_dim_periodo",
+						"container": "container-ins-mat"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DIM_PERIODO_PARQUET')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DIM_PERIODO"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "DIM_PERIODO.parquet",
+						"folderPath": "vdirectory_dim_periodo",
+						"container": "container-ins-mat"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DIM_POSTULANTE_PARQUET')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DIM_POSTULANTES"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "DIM_POSTULANTES.parquet",
+						"folderPath": "vdirectory_dim_postulante",
+						"container": "container-ins-mat"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DIM_POSTULANTE_PARQUET_FINAL')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DIM_POSTULANTES"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "POSTULANTES_FINAL.parquet",
+						"folderPath": "vdirectory_dim_postulante",
+						"container": "container-ins-mat"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "Hash",
+						"type": "UTF8"
+					},
+					{
+						"name": "PK_PERSONA",
+						"type": "INT32"
+					},
+					{
+						"name": "TIPO_IDENTIFICACION_PERSONA",
+						"type": "UTF8"
+					},
+					{
+						"name": "NOMBRES_PERSONA",
+						"type": "UTF8"
+					},
+					{
+						"name": "PRIMER_APELLIDO_PERSONA",
+						"type": "UTF8"
+					},
+					{
+						"name": "SEGUNDO_APELLIDO_PERSONA",
+						"type": "UTF8"
+					},
+					{
+						"name": "CORREO_PERSONA",
+						"type": "UTF8"
+					},
+					{
+						"name": "TELEFONO_PERSONA",
+						"type": "UTF8"
+					},
+					{
+						"name": "GENERO_PERSONA",
+						"type": "UTF8"
+					},
+					{
+						"name": "INDICADOR_EXTRANJERO_PERSONA",
+						"type": "UTF8"
+					},
+					{
+						"name": "INDICADOR_DISCAPACIDAD_PERSONA",
+						"type": "UTF8"
+					},
+					{
+						"name": "TIPO_DISCAPACIDAD_PERSONA",
+						"type": "UTF8"
+					},
+					{
+						"name": "FECHA_NACIMIENTO_PERSONA",
+						"type": "INT96"
+					},
+					{
+						"name": "DateUpdate",
+						"type": "INT96"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DIM_PROGRAMA_ACADEMICO')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DIM_PROGRAMA_ACADEMICO"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "DIM_PROGRAMA_ACADEMICO.parquet",
+						"folderPath": "vdirectory_dim_programa_academico",
+						"container": "container-ins-mat"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DIM_PROGRAMA_ACADEMICO_FINAL')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DIM_PROGRAMA_ACADEMICO"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "DIM_PROGRAMA_ACADEMICO_FINAL.parquet",
+						"folderPath": "vdirectory_dim_programa_academico",
+						"container": "container-ins-mat"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FAC_INSTITUCION_FINAL')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "FAC_INSTITUCION_PROCEDENCIA"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "FAC_INSTITUCION_FINAL.parquet",
+						"folderPath": "vdirectory_fac_institucion",
+						"container": "container-ins-mat"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FAC_INSTITUCION_PARQUET')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "FAC_INSTITUCION_PROCEDENCIA"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "FAC_INSTITUCION.parquet",
+						"folderPath": "vdirectory_fac_institucion",
+						"container": "container-ins-mat"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CONNECT_REPLICA_PROD_UPS')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "CONEXIÓN REPLICA PROD",
+				"annotations": [],
+				"type": "PostgreSqlV2",
+				"typeProperties": {
+					"server": "[parameters('CONNECT_REPLICA_PROD_UPS_properties_typeProperties_server')]",
+					"port": 5432,
+					"database": "[parameters('CONNECT_REPLICA_PROD_UPS_properties_typeProperties_database')]",
+					"username": "[parameters('CONNECT_REPLICA_PROD_UPS_properties_typeProperties_username')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('CONNECT_REPLICA_PROD_UPS_password')]"
+					},
+					"sslMode": 2,
+					"authenticationType": "Basic"
+				},
+				"connectVia": {
+					"referenceName": "IntegrationRuntimeCD",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/IntegrationRuntimeCD')]"
+			]
+		}
+	]
+}

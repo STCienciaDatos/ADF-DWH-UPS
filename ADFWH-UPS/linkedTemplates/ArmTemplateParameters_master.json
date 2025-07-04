@@ -1,0 +1,57 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "ADFWH-UPS"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"value": ""
+		},
+		"AzurePostgreSql1_connectionString": {
+			"value": ""
+		},
+		"AzurePostgreSql2_password": {
+			"value": ""
+		},
+		"CONNECT_REPLICA_PROD_UPS_password": {
+			"value": ""
+		},
+		"PostgreSql1_password": {
+			"value": ""
+		},
+		"AzurePostgreSql2_properties_typeProperties_server": {
+			"value": "db-dataups.postgres.database.azure.com"
+		},
+		"AzurePostgreSql2_properties_typeProperties_database": {
+			"value": "postgres"
+		},
+		"AzurePostgreSql2_properties_typeProperties_username": {
+			"value": "sysadmin"
+		},
+		"CONNECT_REPLICA_PROD_UPS_properties_typeProperties_server": {
+			"value": "localhost"
+		},
+		"CONNECT_REPLICA_PROD_UPS_properties_typeProperties_database": {
+			"value": "db_replicaprod_fdw"
+		},
+		"CONNECT_REPLICA_PROD_UPS_properties_typeProperties_username": {
+			"value": "postgres"
+		},
+		"PostgreSql1_properties_typeProperties_server": {
+			"value": "localhost"
+		},
+		"PostgreSql1_properties_typeProperties_database": {
+			"value": "postgres"
+		},
+		"PostgreSql1_properties_typeProperties_username": {
+			"value": "postgres"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
