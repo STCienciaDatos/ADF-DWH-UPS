@@ -1,0 +1,9 @@
+{
+	"name": "crea_dim_p",
+	"properties": {
+		"folder": {
+			"name": "DIM_POSTULANTES"
+		},
+		"annotations": []
+	}
+}
