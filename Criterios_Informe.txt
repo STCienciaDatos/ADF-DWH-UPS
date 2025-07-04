@@ -1,0 +1,9 @@
+Criterios para considerar relacionados al informe de banco CoDesarrollo para el estado del estudiante:
+
+CONTINUA: Estudiante que, a la fecha del informe solicitado por la Secretaría Técnica de Bienestar Estudiantil, se encuentra matriculado durante el período académico vigente.
+
+ABANDONA: Estudiante que, a la fecha del informe solicitado por la Secretaría Técnica de Bienestar Estudiantil, no se encuentra matriculado durante el período académico vigente y registran aún materias pendientes de aprobación.
+
+EGRESADA/O: Estudiante que, a la fecha del informe solicitado por la Secretaría Técnica de Bienestar Estudiantil, ha culminado sus estudios, aprobando todas sus materias de su proyecto académico y tiene pendiente materias de titulación (Trabajos de titulación, proyectos de titulación, integración curricular, etc..), o aun no ha realizado los tramites de titulación.
+
+GRADUADA/O: Estudiante que, a la fecha del informe solicitado por la Secretaría Técnica de Bienestar Estudiantil, ha culminado sus estudios, aprobando todas sus materias de su proyecto académico y se encuentra registrado su graduación.
