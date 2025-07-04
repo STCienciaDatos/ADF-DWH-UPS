@@ -43,20 +43,20 @@
 							{
 								"source": {
 									"name": "codigo_interno_pos_alu",
-									"type": "Int32",
-									"physicalType": "integer"
+									"type": "Decimal",
+									"physicalType": "numeric"
 								},
 								"sink": {
 									"name": "codigo_interno_pos_alu",
-									"type": "Int32",
-									"physicalType": "INT_32"
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
 								}
 							},
 							{
 								"source": {
 									"name": "tipo_identificacion",
 									"type": "String",
-									"physicalType": "text"
+									"physicalType": "character varying"
 								},
 								"sink": {
 									"name": "tipo_identificacion",
@@ -68,7 +68,7 @@
 								"source": {
 									"name": "nro_identificacion",
 									"type": "String",
-									"physicalType": "text"
+									"physicalType": "character varying"
 								},
 								"sink": {
 									"name": "nro_identificacion",
@@ -80,7 +80,7 @@
 								"source": {
 									"name": "nombres",
 									"type": "String",
-									"physicalType": "text"
+									"physicalType": "character varying"
 								},
 								"sink": {
 									"name": "nombres",
@@ -92,7 +92,7 @@
 								"source": {
 									"name": "apellidos",
 									"type": "String",
-									"physicalType": "text"
+									"physicalType": "character varying"
 								},
 								"sink": {
 									"name": "apellidos",
@@ -104,7 +104,7 @@
 								"source": {
 									"name": "correo_personal",
 									"type": "String",
-									"physicalType": "text"
+									"physicalType": "character varying"
 								},
 								"sink": {
 									"name": "correo_personal",
@@ -116,7 +116,7 @@
 								"source": {
 									"name": "correo_institucional",
 									"type": "String",
-									"physicalType": "text"
+									"physicalType": "character varying"
 								},
 								"sink": {
 									"name": "correo_institucional",
@@ -128,7 +128,7 @@
 								"source": {
 									"name": "genero",
 									"type": "String",
-									"physicalType": "text"
+									"physicalType": "character varying"
 								},
 								"sink": {
 									"name": "genero",
@@ -140,7 +140,7 @@
 								"source": {
 									"name": "etnia",
 									"type": "String",
-									"physicalType": "text"
+									"physicalType": "character varying"
 								},
 								"sink": {
 									"name": "etnia",
@@ -152,7 +152,7 @@
 								"source": {
 									"name": "estado_civil",
 									"type": "String",
-									"physicalType": "text"
+									"physicalType": "character varying"
 								},
 								"sink": {
 									"name": "estado_civil",
@@ -176,7 +176,7 @@
 								"source": {
 									"name": "telefono",
 									"type": "String",
-									"physicalType": "text"
+									"physicalType": "character varying"
 								},
 								"sink": {
 									"name": "telefono",
@@ -188,7 +188,7 @@
 								"source": {
 									"name": "celular",
 									"type": "String",
-									"physicalType": "text"
+									"physicalType": "character varying"
 								},
 								"sink": {
 									"name": "celular",
@@ -200,7 +200,7 @@
 								"source": {
 									"name": "indicador_extranjero",
 									"type": "String",
-									"physicalType": "text"
+									"physicalType": "character varying"
 								},
 								"sink": {
 									"name": "indicador_extranjero",
@@ -212,7 +212,7 @@
 								"source": {
 									"name": "nacionalidad",
 									"type": "String",
-									"physicalType": "text"
+									"physicalType": "character varying"
 								},
 								"sink": {
 									"name": "nacionalidad",
@@ -224,7 +224,7 @@
 								"source": {
 									"name": "tiene_discapacidad",
 									"type": "String",
-									"physicalType": "text"
+									"physicalType": "character varying"
 								},
 								"sink": {
 									"name": "tiene_discapacidad",
@@ -236,7 +236,7 @@
 								"source": {
 									"name": "sufre_enfermedad_catastrofica",
 									"type": "String",
-									"physicalType": "text"
+									"physicalType": "character varying"
 								},
 								"sink": {
 									"name": "sufre_enfermedad_catastrofica",
@@ -248,10 +248,166 @@
 								"source": {
 									"name": "estudiante_tiene_trastorno_aprendizaje",
 									"type": "String",
-									"physicalType": "text"
+									"physicalType": "character varying"
 								},
 								"sink": {
 									"name": "estudiante_tiene_trastorno_aprendizaje",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "pais_nacimiento",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "pais_nacimiento",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "region_nacimiento",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "region_nacimiento",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "provincia_nacimiento",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "provincia_nacimiento",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "ciudad_nacimiento",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "ciudad_nacimiento",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "parroquia_nacimiento",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "parroquia_nacimiento",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "pais_residencia",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "pais_residencia",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "region_residencia",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "region_residencia",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "provincia_residencia",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "provincia_residencia",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "ciudad_residencia",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "ciudad_residencia",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "parroquia_residencia",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "parroquia_residencia",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "direccion_calle_principal",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "direccion_calle_principal",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "direccion_calle_secundaria",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "direccion_calle_secundaria",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "barrio_sector",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "barrio_sector",
 									"type": "String",
 									"physicalType": "UTF8"
 								}
@@ -304,6 +460,8 @@
 			{
 				"name": "Data flow1",
 				"type": "ExecuteDataFlow",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "VIEW_TO_PARQUET",
@@ -335,6 +493,8 @@
 			{
 				"name": "Copy data2",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Data flow1",
