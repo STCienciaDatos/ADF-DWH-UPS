@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "ADFWH-UPS"
 		},
+		"AZURE_POG_DWH_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'AZURE_POG_DWH'"
+		},
 		"AzureBlobStorage1_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
@@ -26,6 +30,18 @@
 		"PostgreSql1_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'PostgreSql1'"
+		},
+		"AZURE_POG_DWH_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "db-dataups.postgres.database.azure.com"
+		},
+		"AZURE_POG_DWH_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "db_dwhups"
+		},
+		"AZURE_POG_DWH_properties_typeProperties_username": {
+			"type": "string",
+			"defaultValue": "sysadmin"
 		},
 		"AzurePostgreSql2_properties_typeProperties_server": {
 			"type": "string",
@@ -90,6 +106,9 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"AZURE_POG_DWH_password": {
+						"value": "[parameters('AZURE_POG_DWH_password')]"
+					},
 					"AzureBlobStorage1_connectionString": {
 						"value": "[parameters('AzureBlobStorage1_connectionString')]"
 					},
@@ -99,8 +118,14 @@
 					"AzurePostgreSql2_password": {
 						"value": "[parameters('AzurePostgreSql2_password')]"
 					},
-					"CONNECT_REPLICA_PROD_UPS_password": {
-						"value": "[parameters('CONNECT_REPLICA_PROD_UPS_password')]"
+					"AZURE_POG_DWH_properties_typeProperties_server": {
+						"value": "[parameters('AZURE_POG_DWH_properties_typeProperties_server')]"
+					},
+					"AZURE_POG_DWH_properties_typeProperties_database": {
+						"value": "[parameters('AZURE_POG_DWH_properties_typeProperties_database')]"
+					},
+					"AZURE_POG_DWH_properties_typeProperties_username": {
+						"value": "[parameters('AZURE_POG_DWH_properties_typeProperties_username')]"
 					},
 					"AzurePostgreSql2_properties_typeProperties_server": {
 						"value": "[parameters('AzurePostgreSql2_properties_typeProperties_server')]"
@@ -110,15 +135,6 @@
 					},
 					"AzurePostgreSql2_properties_typeProperties_username": {
 						"value": "[parameters('AzurePostgreSql2_properties_typeProperties_username')]"
-					},
-					"CONNECT_REPLICA_PROD_UPS_properties_typeProperties_server": {
-						"value": "[parameters('CONNECT_REPLICA_PROD_UPS_properties_typeProperties_server')]"
-					},
-					"CONNECT_REPLICA_PROD_UPS_properties_typeProperties_database": {
-						"value": "[parameters('CONNECT_REPLICA_PROD_UPS_properties_typeProperties_database')]"
-					},
-					"CONNECT_REPLICA_PROD_UPS_properties_typeProperties_username": {
-						"value": "[parameters('CONNECT_REPLICA_PROD_UPS_properties_typeProperties_username')]"
 					}
 				}
 			},
@@ -138,8 +154,20 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"CONNECT_REPLICA_PROD_UPS_password": {
+						"value": "[parameters('CONNECT_REPLICA_PROD_UPS_password')]"
+					},
 					"PostgreSql1_password": {
 						"value": "[parameters('PostgreSql1_password')]"
+					},
+					"CONNECT_REPLICA_PROD_UPS_properties_typeProperties_server": {
+						"value": "[parameters('CONNECT_REPLICA_PROD_UPS_properties_typeProperties_server')]"
+					},
+					"CONNECT_REPLICA_PROD_UPS_properties_typeProperties_database": {
+						"value": "[parameters('CONNECT_REPLICA_PROD_UPS_properties_typeProperties_database')]"
+					},
+					"CONNECT_REPLICA_PROD_UPS_properties_typeProperties_username": {
+						"value": "[parameters('CONNECT_REPLICA_PROD_UPS_properties_typeProperties_username')]"
 					},
 					"PostgreSql1_properties_typeProperties_server": {
 						"value": "[parameters('PostgreSql1_properties_typeProperties_server')]"

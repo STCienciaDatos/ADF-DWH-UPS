@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "ADFWH-UPS"
 		},
+		"AZURE_POG_DWH_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'AZURE_POG_DWH'"
+		},
 		"AzureBlobStorage1_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
@@ -19,9 +23,17 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'AzurePostgreSql2'"
 		},
-		"CONNECT_REPLICA_PROD_UPS_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'CONNECT_REPLICA_PROD_UPS'"
+		"AZURE_POG_DWH_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "db-dataups.postgres.database.azure.com"
+		},
+		"AZURE_POG_DWH_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "db_dwhups"
+		},
+		"AZURE_POG_DWH_properties_typeProperties_username": {
+			"type": "string",
+			"defaultValue": "sysadmin"
 		},
 		"AzurePostgreSql2_properties_typeProperties_server": {
 			"type": "string",
@@ -34,24 +46,35 @@
 		"AzurePostgreSql2_properties_typeProperties_username": {
 			"type": "string",
 			"defaultValue": "sysadmin"
-		},
-		"CONNECT_REPLICA_PROD_UPS_properties_typeProperties_server": {
-			"type": "string",
-			"defaultValue": "localhost"
-		},
-		"CONNECT_REPLICA_PROD_UPS_properties_typeProperties_database": {
-			"type": "string",
-			"defaultValue": "db_replicaprod_fdw"
-		},
-		"CONNECT_REPLICA_PROD_UPS_properties_typeProperties_username": {
-			"type": "string",
-			"defaultValue": "postgres"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/AZURE_POG_DWH')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzurePostgreSql",
+				"version": "2.0",
+				"typeProperties": {
+					"server": "[parameters('AZURE_POG_DWH_properties_typeProperties_server')]",
+					"port": "5432",
+					"database": "[parameters('AZURE_POG_DWH_properties_typeProperties_database')]",
+					"sslMode": 2,
+					"username": "[parameters('AZURE_POG_DWH_properties_typeProperties_username')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('AZURE_POG_DWH_password')]"
+					},
+					"authenticationType": "Basic"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -111,6 +134,232 @@
 				"typeProperties": {}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AZURE_DWH_POS_ALU')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AZURE_POG_DWH",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzurePostgreSqlTable",
+				"schema": [
+					{
+						"name": "id_dim_postulante_alumno",
+						"type": "integer",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "codigo_interno_pos_alu",
+						"type": "numeric",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "tipo_identificacion",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "nro_identificacion",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "nombres",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "apellidos",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "correo_personal",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "correo_institucional",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "genero",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "etnia",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "estado_civil",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "fecha_nacimiento",
+						"type": "date",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "telefono",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "celular",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "indicador_extranjero",
+						"type": "boolean",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "nacionalidad",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "indicador_discapacidad",
+						"type": "boolean",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "indicador_enfermedad_catastrofica",
+						"type": "boolean",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "indicador_nec_esp_aprendizaje",
+						"type": "boolean",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "fecha_adicion",
+						"type": "date",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "fecha_modificacion",
+						"type": "date",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "pais_nacimiento",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "region_nacimiento",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "provincia_nacimiento",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "ciudad_nacimiento",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "parroquia_nacimiento",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "pais_residencia",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "region_residencia",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "provincia_residencia",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "ciudad_residencia",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "parroquia_residencia",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "direccion_calle_principal",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "direccion_calle_secundaria",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "barrio_sector",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					}
+				],
+				"typeProperties": {
+					"schema": "dwh_ups",
+					"table": "dim_postulante_alumno"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AZURE_POG_DWH')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/AZ_PG_INSTITUCION_LOOKUPS')]",
@@ -979,64 +1228,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/FAC_INSTITUCION_PARQUET')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "FAC_INSTITUCION_PROCEDENCIA"
-				},
-				"annotations": [],
-				"type": "Parquet",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "FAC_INSTITUCION.parquet",
-						"folderPath": "vdirectory_fac_institucion",
-						"container": "container-ins-mat"
-					},
-					"compressionCodec": "snappy"
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/CONNECT_REPLICA_PROD_UPS')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "CONEXIÓN REPLICA PROD",
-				"annotations": [],
-				"type": "PostgreSqlV2",
-				"typeProperties": {
-					"server": "[parameters('CONNECT_REPLICA_PROD_UPS_properties_typeProperties_server')]",
-					"port": 5432,
-					"database": "[parameters('CONNECT_REPLICA_PROD_UPS_properties_typeProperties_database')]",
-					"username": "[parameters('CONNECT_REPLICA_PROD_UPS_properties_typeProperties_username')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('CONNECT_REPLICA_PROD_UPS_password')]"
-					},
-					"sslMode": 2,
-					"authenticationType": "Basic"
-				},
-				"connectVia": {
-					"referenceName": "IntegrationRuntimeCD",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/IntegrationRuntimeCD')]"
 			]
 		}
 	]

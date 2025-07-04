@@ -5,6 +5,9 @@
 		"factoryName": {
 			"value": "ADFWH-UPS"
 		},
+		"AZURE_POG_DWH_password": {
+			"value": ""
+		},
 		"AzureBlobStorage1_connectionString": {
 			"value": ""
 		},
@@ -19,6 +22,15 @@
 		},
 		"PostgreSql1_password": {
 			"value": ""
+		},
+		"AZURE_POG_DWH_properties_typeProperties_server": {
+			"value": "db-dataups.postgres.database.azure.com"
+		},
+		"AZURE_POG_DWH_properties_typeProperties_database": {
+			"value": "db_dwhups"
+		},
+		"AZURE_POG_DWH_properties_typeProperties_username": {
+			"value": "sysadmin"
 		},
 		"AzurePostgreSql2_properties_typeProperties_server": {
 			"value": "db-dataups.postgres.database.azure.com"
