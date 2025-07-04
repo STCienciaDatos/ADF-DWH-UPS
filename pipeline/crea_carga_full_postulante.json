@@ -462,6 +462,8 @@
 			{
 				"name": "Data flow1",
 				"type": "ExecuteDataFlow",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "VIEW_TO_PARQUET",
@@ -493,8 +495,6 @@
 			{
 				"name": "Copy data2",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Data flow1",
@@ -536,7 +536,7 @@
 						"type": "AzurePostgreSqlSink",
 						"writeBatchSize": 1000000,
 						"writeBatchTimeout": "00:30:00",
-						"preCopyScript": "TRUNCATE TABLE dwh_lookup.dim_postulante_alumno_lookup;\n",
+						"preCopyScript": "TRUNCATE TABLE dwh_lookup.dim_postulante_alumno_lookup;",
 						"writeMethod": "CopyCommand"
 					},
 					"enableStaging": false,
@@ -781,6 +781,162 @@
 									"name": "fecha_modificacion",
 									"type": "DateTime",
 									"physicalType": "date"
+								}
+							},
+							{
+								"source": {
+									"name": "pais_nacimiento",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "pais_nacimiento",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "region_nacimiento",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "region_nacimiento",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "provincia_nacimiento",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "provincia_nacimiento",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "ciudad_nacimiento",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "ciudad_nacimiento",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "parroquia_nacimiento",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "parroquia_nacimiento",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "pais_residencia",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "pais_residencia",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "region_residencia",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "region_residencia",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "provincia_residencia",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "provincia_residencia",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "ciudad_residencia",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "ciudad_residencia",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "parroquia_residencia",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "parroquia_residencia",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "direccion_calle_principal",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "direccion_calle_principal",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "direccion_calle_secundaria",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "direccion_calle_secundaria",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "barrio_sector",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "barrio_sector",
+									"type": "String",
+									"physicalType": "character varying"
 								}
 							},
 							{
