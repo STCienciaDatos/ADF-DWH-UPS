@@ -189,7 +189,7 @@
 				"toString(aud_fecha_modificacion))),",
 				"          FECHA_ULTIMA_ACTUALIZACION = toDate(currentTimestamp()),",
 				"          LINAJE = 'ins_alumno, cliente_local') ~> updatecreatehash",
-				"vericacionduplicados filter(aud_fecha_adicion == FECHA_ULTIMA_ACTUALIZACION) ~> filter1",
+				"vericacionduplicados filter(aud_fecha_modificacion == FECHA_ULTIMA_ACTUALIZACION || aud_fecha_adicion == FECHA_ULTIMA_ACTUALIZACION) ~> filter1",
 				"definciontipodecampo sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
