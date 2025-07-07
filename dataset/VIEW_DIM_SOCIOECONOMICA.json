@@ -1,0 +1,16 @@
+{
+	"name": "VIEW_DIM_SOCIOECONOMICA",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CONNECT_REPLICA_PROD_UPS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "PostgreSqlV2Table",
+		"schema": [],
+		"typeProperties": {
+			"schema": "REPLICA_SCHEMA",
+			"table": "FT_DIM_CLASIFICACION_SOCIOECONOMICA"
+		}
+	}
+}

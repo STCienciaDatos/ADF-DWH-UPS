@@ -16,11 +16,11 @@
 				"userProperties": [
 					{
 						"name": "Source",
-						"value": "REPLICA_SCHEMA.VIEW_DIM_PERIODO_COHORTE"
+						"value": "REPLICA_SCHEMA.FT_FAC_CLA_SOCIOECONOMICA_POS_ALU"
 					},
 					{
 						"name": "Destination",
-						"value": "container-ins-mat/vdirectory_dim_periodo/DIM_PERIODO.parquet"
+						"value": "container-ins-mat/vdirectory_fac_socioeconomica/FAC_SOCIOECONOMICA.parquet"
 					}
 				],
 				"typeProperties": {
@@ -42,120 +42,72 @@
 						"mappings": [
 							{
 								"source": {
-									"name": "codigo_interno_periodo_cohorte",
+									"name": "CODIGO_INTERNO_PERIODO_VAL_FICHA",
 									"type": "Decimal",
 									"physicalType": "numeric"
 								},
 								"sink": {
-									"name": "codigo_interno_periodo_cohorte",
+									"name": "CODIGO_INTERNO_PERIODO_VAL_FICHA",
 									"type": "Decimal",
 									"physicalType": "DECIMAL"
 								}
 							},
 							{
 								"source": {
-									"name": "periodo",
-									"type": "String",
-									"physicalType": "character varying"
-								},
-								"sink": {
-									"name": "periodo",
-									"type": "String",
-									"physicalType": "UTF8"
-								}
-							},
-							{
-								"source": {
-									"name": "indicador_par_impar",
-									"type": "String",
-									"physicalType": "character varying"
-								},
-								"sink": {
-									"name": "indicador_par_impar",
-									"type": "String",
-									"physicalType": "UTF8"
-								}
-							},
-							{
-								"source": {
-									"name": "anio_ini_periodo",
+									"name": "CODIGO_INTERNO_POS_ALU",
 									"type": "Decimal",
 									"physicalType": "numeric"
 								},
 								"sink": {
-									"name": "anio_ini_periodo",
+									"name": "CODIGO_INTERNO_POS_ALU",
 									"type": "Decimal",
 									"physicalType": "DECIMAL"
 								}
 							},
 							{
 								"source": {
-									"name": "mes_ini_periodo",
+									"name": "CODIGO_INTERNO_RANGO_FICHA",
 									"type": "Decimal",
 									"physicalType": "numeric"
 								},
 								"sink": {
-									"name": "mes_ini_periodo",
+									"name": "CODIGO_INTERNO_RANGO_FICHA",
 									"type": "Decimal",
 									"physicalType": "DECIMAL"
 								}
 							},
 							{
 								"source": {
-									"name": "fecha_inicio_periodo",
+									"name": "VALORACION",
+									"type": "Decimal",
+									"physicalType": "numeric"
+								},
+								"sink": {
+									"name": "VALORACION",
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
+								}
+							},
+							{
+								"source": {
+									"name": "AUD_FECHA_ADICION",
 									"type": "DateTime",
 									"physicalType": "date"
 								},
 								"sink": {
-									"name": "fecha_inicio_periodo",
+									"name": "AUD_FECHA_ADICION",
 									"type": "DateTime",
 									"physicalType": "INT_96"
 								}
 							},
 							{
 								"source": {
-									"name": "fecha_fin_periodo",
+									"name": "AUD_FECHA_MODIFICACION",
 									"type": "DateTime",
 									"physicalType": "date"
 								},
 								"sink": {
-									"name": "fecha_fin_periodo",
-									"type": "DateTime",
-									"physicalType": "INT_96"
-								}
-							},
-							{
-								"source": {
-									"name": "tipo_periodo_cohorte",
-									"type": "String",
-									"physicalType": "character varying"
-								},
-								"sink": {
-									"name": "tipo_periodo_cohorte",
-									"type": "String",
-									"physicalType": "UTF8"
-								}
-							},
-							{
-								"source": {
-									"name": "aud_fecha_adicion",
-									"type": "DateTime",
-									"physicalType": "date"
-								},
-								"sink": {
-									"name": "aud_fecha_adicion",
-									"type": "DateTime",
-									"physicalType": "INT_96"
-								}
-							},
-							{
-								"source": {
-									"name": "aud_fecha_modificacion",
-									"type": "DateTime",
-									"physicalType": "date"
-								},
-								"sink": {
-									"name": "aud_fecha_modificacion",
+									"name": "AUD_FECHA_MODIFICACION",
 									"type": "DateTime",
 									"physicalType": "INT_96"
 								}
@@ -170,13 +122,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "VIEW_DIM_PERIODO",
+						"referenceName": "VIEW_FACT_SOCIOECONOMICA",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "DIM_PERIODO_PARQUET",
+						"referenceName": "FAC_SOCIOECONOMICA_PARQUET",
 						"type": "DatasetReference"
 					}
 				]
@@ -184,6 +136,8 @@
 			{
 				"name": "Data flow1",
 				"type": "ExecuteDataFlow",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Copy data1",
@@ -215,6 +169,8 @@
 			{
 				"name": "Copy data2",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Data flow1",

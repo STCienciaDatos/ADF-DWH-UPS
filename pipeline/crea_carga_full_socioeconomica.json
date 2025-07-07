@@ -16,11 +16,11 @@
 				"userProperties": [
 					{
 						"name": "Source",
-						"value": "REPLICA_SCHEMA.VIEW_DIM_PERIODO_COHORTE"
+						"value": "REPLICA_SCHEMA.FT_DIM_CLASIFICACION_SOCIOECONOMICA"
 					},
 					{
 						"name": "Destination",
-						"value": "container-ins-mat/vdirectory_dim_periodo/DIM_PERIODO.parquet"
+						"value": "container-ins-mat/vdirectory_dim_socioeconomica/DIM_SOCIOECONOMICA.parquet"
 					}
 				],
 				"typeProperties": {
@@ -42,98 +42,74 @@
 						"mappings": [
 							{
 								"source": {
-									"name": "codigo_interno_periodo_cohorte",
+									"name": "codigo_interno_rango_ficha",
 									"type": "Decimal",
 									"physicalType": "numeric"
 								},
 								"sink": {
-									"name": "codigo_interno_periodo_cohorte",
+									"name": "codigo_interno_rango_ficha",
 									"type": "Decimal",
 									"physicalType": "DECIMAL"
 								}
 							},
 							{
 								"source": {
-									"name": "periodo",
-									"type": "String",
-									"physicalType": "character varying"
-								},
-								"sink": {
-									"name": "periodo",
-									"type": "String",
-									"physicalType": "UTF8"
-								}
-							},
-							{
-								"source": {
-									"name": "indicador_par_impar",
-									"type": "String",
-									"physicalType": "character varying"
-								},
-								"sink": {
-									"name": "indicador_par_impar",
-									"type": "String",
-									"physicalType": "UTF8"
-								}
-							},
-							{
-								"source": {
-									"name": "anio_ini_periodo",
+									"name": "quintil",
 									"type": "Decimal",
 									"physicalType": "numeric"
 								},
 								"sink": {
-									"name": "anio_ini_periodo",
+									"name": "quintil",
 									"type": "Decimal",
 									"physicalType": "DECIMAL"
 								}
 							},
 							{
 								"source": {
-									"name": "mes_ini_periodo",
+									"name": "descripcion_quintil",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "descripcion_quintil",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "nivel",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "nivel",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "raf_limite_inferior",
 									"type": "Decimal",
 									"physicalType": "numeric"
 								},
 								"sink": {
-									"name": "mes_ini_periodo",
+									"name": "raf_limite_inferior",
 									"type": "Decimal",
 									"physicalType": "DECIMAL"
 								}
 							},
 							{
 								"source": {
-									"name": "fecha_inicio_periodo",
-									"type": "DateTime",
-									"physicalType": "date"
+									"name": "raf_limite_superior",
+									"type": "Decimal",
+									"physicalType": "numeric"
 								},
 								"sink": {
-									"name": "fecha_inicio_periodo",
-									"type": "DateTime",
-									"physicalType": "INT_96"
-								}
-							},
-							{
-								"source": {
-									"name": "fecha_fin_periodo",
-									"type": "DateTime",
-									"physicalType": "date"
-								},
-								"sink": {
-									"name": "fecha_fin_periodo",
-									"type": "DateTime",
-									"physicalType": "INT_96"
-								}
-							},
-							{
-								"source": {
-									"name": "tipo_periodo_cohorte",
-									"type": "String",
-									"physicalType": "character varying"
-								},
-								"sink": {
-									"name": "tipo_periodo_cohorte",
-									"type": "String",
-									"physicalType": "UTF8"
+									"name": "raf_limite_superior",
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
 								}
 							},
 							{
@@ -170,13 +146,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "VIEW_DIM_PERIODO",
+						"referenceName": "VIEW_DIM_SOCIOECONOMICA",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "DIM_PERIODO_PARQUET",
+						"referenceName": "DIM_SOCIOECONOMICA_PARQUET",
 						"type": "DatasetReference"
 					}
 				]
@@ -184,6 +160,8 @@
 			{
 				"name": "Data flow1",
 				"type": "ExecuteDataFlow",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Copy data1",
@@ -215,6 +193,8 @@
 			{
 				"name": "Copy data2",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Data flow1",
