@@ -9,7 +9,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "DIM_PERIODO_PARQUET",
+						"referenceName": "DIM_SOCIOECONOMICA_PARQUET",
 						"type": "DatasetReference"
 					},
 					"name": "source"
@@ -40,19 +40,7 @@
 				}
 			],
 			"scriptLines": [
-				"source(output(",
-				"          codigo_interno_periodo_cohorte as decimal(38,18),",
-				"          periodo as string,",
-				"          indicador_par_impar as string,",
-				"          anio_ini_periodo as decimal(38,18),",
-				"          mes_ini_periodo as decimal(38,18),",
-				"          fecha_inicio_periodo as timestamp,",
-				"          fecha_fin_periodo as timestamp,",
-				"          tipo_periodo_cohorte as string,",
-				"          aud_fecha_adicion as timestamp,",
-				"          aud_fecha_modificacion as timestamp",
-				"     ),",
-				"     allowSchemaDrift: true,",
+				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     format: 'parquet') ~> source",
