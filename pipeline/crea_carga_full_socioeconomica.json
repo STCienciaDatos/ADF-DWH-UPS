@@ -160,8 +160,6 @@
 			{
 				"name": "Data flow1",
 				"type": "ExecuteDataFlow",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Copy data1",
@@ -180,7 +178,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "df_periodo",
+						"referenceName": "df_socioeconomica",
 						"type": "DataFlowReference"
 					},
 					"compute": {
