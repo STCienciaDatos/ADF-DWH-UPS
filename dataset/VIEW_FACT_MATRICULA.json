@@ -1,0 +1,16 @@
+{
+	"name": "VIEW_FACT_MATRICULA",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CONNECT_REPLICA_PROD_UPS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "PostgreSqlV2Table",
+		"schema": [],
+		"typeProperties": {
+			"schema": "REPLICA_SCHEMA",
+			"table": "FT_FAC_MATRICULA_PAGOS"
+		}
+	}
+}
