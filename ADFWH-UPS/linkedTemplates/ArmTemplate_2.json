@@ -13,6 +13,1823 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/crea_carga_full_fac_inscripciones')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "REPLICA_SCHEMA.VIEW_DIM_PERIODO_COHORTE"
+							},
+							{
+								"name": "Destination",
+								"value": "container-ins-mat/vdirectory_dim_periodo/DIM_PERIODO.parquet"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "PostgreSqlV2Source"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "codigo_interno_periodo_cohorte",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										},
+										"sink": {
+											"name": "codigo_interno_periodo_cohorte",
+											"type": "Decimal",
+											"physicalType": "DECIMAL"
+										}
+									},
+									{
+										"source": {
+											"name": "periodo",
+											"type": "String",
+											"physicalType": "character varying"
+										},
+										"sink": {
+											"name": "periodo",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "indicador_par_impar",
+											"type": "String",
+											"physicalType": "character varying"
+										},
+										"sink": {
+											"name": "indicador_par_impar",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "anio_ini_periodo",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										},
+										"sink": {
+											"name": "anio_ini_periodo",
+											"type": "Decimal",
+											"physicalType": "DECIMAL"
+										}
+									},
+									{
+										"source": {
+											"name": "mes_ini_periodo",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										},
+										"sink": {
+											"name": "mes_ini_periodo",
+											"type": "Decimal",
+											"physicalType": "DECIMAL"
+										}
+									},
+									{
+										"source": {
+											"name": "fecha_inicio_periodo",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "fecha_inicio_periodo",
+											"type": "DateTime",
+											"physicalType": "INT_96"
+										}
+									},
+									{
+										"source": {
+											"name": "fecha_fin_periodo",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "fecha_fin_periodo",
+											"type": "DateTime",
+											"physicalType": "INT_96"
+										}
+									},
+									{
+										"source": {
+											"name": "tipo_periodo_cohorte",
+											"type": "String",
+											"physicalType": "character varying"
+										},
+										"sink": {
+											"name": "tipo_periodo_cohorte",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "aud_fecha_adicion",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "aud_fecha_adicion",
+											"type": "DateTime",
+											"physicalType": "INT_96"
+										}
+									},
+									{
+										"source": {
+											"name": "aud_fecha_modificacion",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "aud_fecha_modificacion",
+											"type": "DateTime",
+											"physicalType": "INT_96"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "VIEW_DIM_PERIODO",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DIM_PERIODO_PARQUET",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Copy data1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_periodo",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Copy data2",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Data flow1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "container-ins-mat/vdirectory_dim_postulante/POSTULANTES_FINAL.parquet"
+							},
+							{
+								"name": "Destination",
+								"value": "dwh_lookup.dim_postulante_alumno_lookup"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "ParquetSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "ParquetReadSettings"
+								}
+							},
+							"sink": {
+								"type": "AzurePostgreSqlSink",
+								"writeBatchSize": 1000000,
+								"writeBatchTimeout": "00:30:00",
+								"preCopyScript": "TRUNCATE TABLE dwh_lookup.dim_periodo_lookup;\n",
+								"writeMethod": "CopyCommand"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "codigo_interno_periodo_cohorte",
+											"type": "Int32",
+											"physicalType": "INT32"
+										},
+										"sink": {
+											"name": "codigo_interno_periodo",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										}
+									},
+									{
+										"source": {
+											"name": "periodo",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "periodo",
+											"type": "String",
+											"physicalType": "character varying"
+										}
+									},
+									{
+										"source": {
+											"name": "indicador_par_impar",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "indicador_par_impar",
+											"type": "String",
+											"physicalType": "character varying"
+										}
+									},
+									{
+										"source": {
+											"name": "anio_ini_periodo",
+											"type": "Int32",
+											"physicalType": "INT32"
+										},
+										"sink": {
+											"name": "anio_ini_periodo",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										}
+									},
+									{
+										"source": {
+											"name": "mes_ini_periodo",
+											"type": "Int32",
+											"physicalType": "INT32"
+										},
+										"sink": {
+											"name": "mes_ini_periodo",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										}
+									},
+									{
+										"source": {
+											"name": "fecha_inicio_periodo",
+											"type": "DateTime",
+											"physicalType": "DATE"
+										},
+										"sink": {
+											"name": "fecha_inicio_periodo",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "fecha_fin_periodo",
+											"type": "DateTime",
+											"physicalType": "DATE"
+										},
+										"sink": {
+											"name": "fecha_fin_periodo",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "tipo_periodo_cohorte",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "tipo_periodo",
+											"type": "String",
+											"physicalType": "character varying"
+										}
+									},
+									{
+										"source": {
+											"name": "aud_fecha_adicion",
+											"type": "DateTime",
+											"physicalType": "DATE"
+										},
+										"sink": {
+											"name": "fecha_adicion",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "aud_fecha_modificacion",
+											"type": "DateTime",
+											"physicalType": "DATE"
+										},
+										"sink": {
+											"name": "fecha_modificacion",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "HASH",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "hash",
+											"type": "String",
+											"physicalType": "text"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA_ULTIMA_ACTUALIZACION",
+											"type": "DateTime",
+											"physicalType": "DATE"
+										},
+										"sink": {
+											"name": "fecha_ultima_actualizacion",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "LINAJE",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "linaje",
+											"type": "String",
+											"physicalType": "text"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DIM_PERIODO_FINAL",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AZ_PG_PERIODO_LOOKUPS",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "FACT_INSCRIPCIONES"
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-07-04T16:50:53Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/crea_carga_full_fac_institucion')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "REPLICA_SCHEMA.FT_DIM_INS_EDU_PROCEDENCIA"
+							},
+							{
+								"name": "Destination",
+								"value": "container-ins-mat/vdirectory_fac_institucion/FAC_INSTITUCION.parquet"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "PostgreSqlV2Source",
+								"queryTimeout": "02:00:00"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "TITULO_BACHILLERATO",
+											"type": "String",
+											"physicalType": "character varying"
+										},
+										"sink": {
+											"name": "TITULO_BACHILLERATO",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA_GRADUACION",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "FECHA_GRADUACION",
+											"type": "DateTime",
+											"physicalType": "INT_96"
+										}
+									},
+									{
+										"source": {
+											"name": "CALIF_GRADUACION",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										},
+										"sink": {
+											"name": "CALIF_GRADUACION",
+											"type": "Decimal",
+											"physicalType": "DECIMAL"
+										}
+									},
+									{
+										"source": {
+											"name": "CALIF_SOBRE",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										},
+										"sink": {
+											"name": "CALIF_SOBRE",
+											"type": "Decimal",
+											"physicalType": "DECIMAL"
+										}
+									},
+									{
+										"source": {
+											"name": "CODIGO_INTERNO_INS_EDU",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										},
+										"sink": {
+											"name": "CODIGO_INTERNO_INS_EDU",
+											"type": "Decimal",
+											"physicalType": "DECIMAL"
+										}
+									},
+									{
+										"source": {
+											"name": "CODIGO_INTERNO_POSTULANTE",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										},
+										"sink": {
+											"name": "CODIGO_INTERNO_POSTULANTE",
+											"type": "Decimal",
+											"physicalType": "DECIMAL"
+										}
+									},
+									{
+										"source": {
+											"name": "AUD_FECHA_ADICION",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "AUD_FECHA_ADICION",
+											"type": "DateTime",
+											"physicalType": "INT_96"
+										}
+									},
+									{
+										"source": {
+											"name": "AUD_FECHA_MODIFICACION",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "AUD_FECHA_MODIFICACION",
+											"type": "DateTime",
+											"physicalType": "INT_96"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "VIEW_FAC_INSTITUCION_EDUCATIVA",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "FAC_INSTITUCION_PARQUET",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Copy data1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_institucion_procedencia",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Copy data2",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Data flow1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "container-ins-mat/vdirectory_dim_postulante/POSTULANTES_FINAL.parquet"
+							},
+							{
+								"name": "Destination",
+								"value": "dwh_lookup.dim_postulante_alumno_lookup"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "ParquetSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "ParquetReadSettings"
+								}
+							},
+							"sink": {
+								"type": "AzurePostgreSqlSink",
+								"writeBatchSize": 1000000,
+								"writeBatchTimeout": "00:30:00",
+								"preCopyScript": "TRUNCATE TABLE dwh_lookup.fact_institucion_educativa_procedencia_lookup;\n",
+								"writeMethod": "CopyCommand"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "TITULO_BACHILLERATO",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "titulo_bachillerato",
+											"type": "String",
+											"physicalType": "character varying"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA_GRADUACION",
+											"type": "DateTime",
+											"physicalType": "DATE"
+										},
+										"sink": {
+											"name": "fecha_graduacion",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "CALIF_GRADUACION",
+											"type": "Int32",
+											"physicalType": "INT32"
+										},
+										"sink": {
+											"name": "calificacion_graduacion",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										}
+									},
+									{
+										"source": {
+											"name": "CALIF_SOBRE",
+											"type": "Int32",
+											"physicalType": "INT32"
+										},
+										"sink": {
+											"name": "calificacion_sobre",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										}
+									},
+									{
+										"source": {
+											"name": "CODIGO_INTERNO_INS_EDU",
+											"type": "Int32",
+											"physicalType": "INT32"
+										},
+										"sink": {
+											"name": "codigo_interno_ins_edu_fk",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										}
+									},
+									{
+										"source": {
+											"name": "CODIGO_INTERNO_POSTULANTE",
+											"type": "Int32",
+											"physicalType": "INT32"
+										},
+										"sink": {
+											"name": "codigo_interno_pos_alu_fk",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										}
+									},
+									{
+										"source": {
+											"name": "AUD_FECHA_ADICION",
+											"type": "DateTime",
+											"physicalType": "DATE"
+										},
+										"sink": {
+											"name": "fecha_adicion",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "AUD_FECHA_MODIFICACION",
+											"type": "DateTime",
+											"physicalType": "DATE"
+										},
+										"sink": {
+											"name": "fecha_modificacion",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "HASH",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "hash",
+											"type": "String",
+											"physicalType": "text"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA_ULTIMA_ACTUALIZACION",
+											"type": "DateTime",
+											"physicalType": "DATE"
+										},
+										"sink": {
+											"name": "fecha_ultima_modificacion",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "LINAJE",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "linaje",
+											"type": "String",
+											"physicalType": "text"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "FAC_INSTITUCION_FINAL",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AZ_PG_INSTITUCION_PROCEDENCIA_LOOKUPS",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "FACT_INSTITUCION_EDUCATIVA_PROCEDENCIA_LOOKUP"
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-07-04T16:56:20Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/crea_carga_full_fac_matricula')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "REPLICA_SCHEMA.VIEW_DIM_PERIODO_COHORTE"
+							},
+							{
+								"name": "Destination",
+								"value": "container-ins-mat/vdirectory_dim_periodo/DIM_PERIODO.parquet"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "PostgreSqlV2Source"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "codigo_interno_periodo_cohorte",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										},
+										"sink": {
+											"name": "codigo_interno_periodo_cohorte",
+											"type": "Decimal",
+											"physicalType": "DECIMAL"
+										}
+									},
+									{
+										"source": {
+											"name": "periodo",
+											"type": "String",
+											"physicalType": "character varying"
+										},
+										"sink": {
+											"name": "periodo",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "indicador_par_impar",
+											"type": "String",
+											"physicalType": "character varying"
+										},
+										"sink": {
+											"name": "indicador_par_impar",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "anio_ini_periodo",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										},
+										"sink": {
+											"name": "anio_ini_periodo",
+											"type": "Decimal",
+											"physicalType": "DECIMAL"
+										}
+									},
+									{
+										"source": {
+											"name": "mes_ini_periodo",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										},
+										"sink": {
+											"name": "mes_ini_periodo",
+											"type": "Decimal",
+											"physicalType": "DECIMAL"
+										}
+									},
+									{
+										"source": {
+											"name": "fecha_inicio_periodo",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "fecha_inicio_periodo",
+											"type": "DateTime",
+											"physicalType": "INT_96"
+										}
+									},
+									{
+										"source": {
+											"name": "fecha_fin_periodo",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "fecha_fin_periodo",
+											"type": "DateTime",
+											"physicalType": "INT_96"
+										}
+									},
+									{
+										"source": {
+											"name": "tipo_periodo_cohorte",
+											"type": "String",
+											"physicalType": "character varying"
+										},
+										"sink": {
+											"name": "tipo_periodo_cohorte",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "aud_fecha_adicion",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "aud_fecha_adicion",
+											"type": "DateTime",
+											"physicalType": "INT_96"
+										}
+									},
+									{
+										"source": {
+											"name": "aud_fecha_modificacion",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "aud_fecha_modificacion",
+											"type": "DateTime",
+											"physicalType": "INT_96"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "VIEW_FACT_MATRICULA",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DIM_PERIODO_PARQUET",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Copy data1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_periodo",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Copy data2",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Data flow1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "container-ins-mat/vdirectory_dim_postulante/POSTULANTES_FINAL.parquet"
+							},
+							{
+								"name": "Destination",
+								"value": "dwh_lookup.dim_postulante_alumno_lookup"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "ParquetSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "ParquetReadSettings"
+								}
+							},
+							"sink": {
+								"type": "AzurePostgreSqlSink",
+								"writeBatchSize": 1000000,
+								"writeBatchTimeout": "00:30:00",
+								"preCopyScript": "TRUNCATE TABLE dwh_lookup.dim_periodo_lookup;\n",
+								"writeMethod": "CopyCommand"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "codigo_interno_periodo_cohorte",
+											"type": "Int32",
+											"physicalType": "INT32"
+										},
+										"sink": {
+											"name": "codigo_interno_periodo",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										}
+									},
+									{
+										"source": {
+											"name": "periodo",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "periodo",
+											"type": "String",
+											"physicalType": "character varying"
+										}
+									},
+									{
+										"source": {
+											"name": "indicador_par_impar",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "indicador_par_impar",
+											"type": "String",
+											"physicalType": "character varying"
+										}
+									},
+									{
+										"source": {
+											"name": "anio_ini_periodo",
+											"type": "Int32",
+											"physicalType": "INT32"
+										},
+										"sink": {
+											"name": "anio_ini_periodo",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										}
+									},
+									{
+										"source": {
+											"name": "mes_ini_periodo",
+											"type": "Int32",
+											"physicalType": "INT32"
+										},
+										"sink": {
+											"name": "mes_ini_periodo",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										}
+									},
+									{
+										"source": {
+											"name": "fecha_inicio_periodo",
+											"type": "DateTime",
+											"physicalType": "DATE"
+										},
+										"sink": {
+											"name": "fecha_inicio_periodo",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "fecha_fin_periodo",
+											"type": "DateTime",
+											"physicalType": "DATE"
+										},
+										"sink": {
+											"name": "fecha_fin_periodo",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "tipo_periodo_cohorte",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "tipo_periodo",
+											"type": "String",
+											"physicalType": "character varying"
+										}
+									},
+									{
+										"source": {
+											"name": "aud_fecha_adicion",
+											"type": "DateTime",
+											"physicalType": "DATE"
+										},
+										"sink": {
+											"name": "fecha_adicion",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "aud_fecha_modificacion",
+											"type": "DateTime",
+											"physicalType": "DATE"
+										},
+										"sink": {
+											"name": "fecha_modificacion",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "HASH",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "hash",
+											"type": "String",
+											"physicalType": "text"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA_ULTIMA_ACTUALIZACION",
+											"type": "DateTime",
+											"physicalType": "DATE"
+										},
+										"sink": {
+											"name": "fecha_ultima_actualizacion",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "LINAJE",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "linaje",
+											"type": "String",
+											"physicalType": "text"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DIM_PERIODO_FINAL",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AZ_PG_PERIODO_LOOKUPS",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "FACT_MATRICULA_PAGOS"
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-07-04T16:50:53Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/crea_carga_full_fac_socioeconomica')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "REPLICA_SCHEMA.VIEW_DIM_PERIODO_COHORTE"
+							},
+							{
+								"name": "Destination",
+								"value": "container-ins-mat/vdirectory_dim_periodo/DIM_PERIODO.parquet"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "PostgreSqlV2Source"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "codigo_interno_periodo_cohorte",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										},
+										"sink": {
+											"name": "codigo_interno_periodo_cohorte",
+											"type": "Decimal",
+											"physicalType": "DECIMAL"
+										}
+									},
+									{
+										"source": {
+											"name": "periodo",
+											"type": "String",
+											"physicalType": "character varying"
+										},
+										"sink": {
+											"name": "periodo",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "indicador_par_impar",
+											"type": "String",
+											"physicalType": "character varying"
+										},
+										"sink": {
+											"name": "indicador_par_impar",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "anio_ini_periodo",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										},
+										"sink": {
+											"name": "anio_ini_periodo",
+											"type": "Decimal",
+											"physicalType": "DECIMAL"
+										}
+									},
+									{
+										"source": {
+											"name": "mes_ini_periodo",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										},
+										"sink": {
+											"name": "mes_ini_periodo",
+											"type": "Decimal",
+											"physicalType": "DECIMAL"
+										}
+									},
+									{
+										"source": {
+											"name": "fecha_inicio_periodo",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "fecha_inicio_periodo",
+											"type": "DateTime",
+											"physicalType": "INT_96"
+										}
+									},
+									{
+										"source": {
+											"name": "fecha_fin_periodo",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "fecha_fin_periodo",
+											"type": "DateTime",
+											"physicalType": "INT_96"
+										}
+									},
+									{
+										"source": {
+											"name": "tipo_periodo_cohorte",
+											"type": "String",
+											"physicalType": "character varying"
+										},
+										"sink": {
+											"name": "tipo_periodo_cohorte",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "aud_fecha_adicion",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "aud_fecha_adicion",
+											"type": "DateTime",
+											"physicalType": "INT_96"
+										}
+									},
+									{
+										"source": {
+											"name": "aud_fecha_modificacion",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "aud_fecha_modificacion",
+											"type": "DateTime",
+											"physicalType": "INT_96"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "VIEW_DIM_PERIODO",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DIM_PERIODO_PARQUET",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Copy data1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_periodo",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Copy data2",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Data flow1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "container-ins-mat/vdirectory_dim_postulante/POSTULANTES_FINAL.parquet"
+							},
+							{
+								"name": "Destination",
+								"value": "dwh_lookup.dim_postulante_alumno_lookup"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "ParquetSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "ParquetReadSettings"
+								}
+							},
+							"sink": {
+								"type": "AzurePostgreSqlSink",
+								"writeBatchSize": 1000000,
+								"writeBatchTimeout": "00:30:00",
+								"preCopyScript": "TRUNCATE TABLE dwh_lookup.dim_periodo_lookup;\n",
+								"writeMethod": "CopyCommand"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "codigo_interno_periodo_cohorte",
+											"type": "Int32",
+											"physicalType": "INT32"
+										},
+										"sink": {
+											"name": "codigo_interno_periodo",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										}
+									},
+									{
+										"source": {
+											"name": "periodo",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "periodo",
+											"type": "String",
+											"physicalType": "character varying"
+										}
+									},
+									{
+										"source": {
+											"name": "indicador_par_impar",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "indicador_par_impar",
+											"type": "String",
+											"physicalType": "character varying"
+										}
+									},
+									{
+										"source": {
+											"name": "anio_ini_periodo",
+											"type": "Int32",
+											"physicalType": "INT32"
+										},
+										"sink": {
+											"name": "anio_ini_periodo",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										}
+									},
+									{
+										"source": {
+											"name": "mes_ini_periodo",
+											"type": "Int32",
+											"physicalType": "INT32"
+										},
+										"sink": {
+											"name": "mes_ini_periodo",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										}
+									},
+									{
+										"source": {
+											"name": "fecha_inicio_periodo",
+											"type": "DateTime",
+											"physicalType": "DATE"
+										},
+										"sink": {
+											"name": "fecha_inicio_periodo",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "fecha_fin_periodo",
+											"type": "DateTime",
+											"physicalType": "DATE"
+										},
+										"sink": {
+											"name": "fecha_fin_periodo",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "tipo_periodo_cohorte",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "tipo_periodo",
+											"type": "String",
+											"physicalType": "character varying"
+										}
+									},
+									{
+										"source": {
+											"name": "aud_fecha_adicion",
+											"type": "DateTime",
+											"physicalType": "DATE"
+										},
+										"sink": {
+											"name": "fecha_adicion",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "aud_fecha_modificacion",
+											"type": "DateTime",
+											"physicalType": "DATE"
+										},
+										"sink": {
+											"name": "fecha_modificacion",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "HASH",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "hash",
+											"type": "String",
+											"physicalType": "text"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA_ULTIMA_ACTUALIZACION",
+											"type": "DateTime",
+											"physicalType": "DATE"
+										},
+										"sink": {
+											"name": "fecha_ultima_actualizacion",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "LINAJE",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "linaje",
+											"type": "String",
+											"physicalType": "text"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DIM_PERIODO_FINAL",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AZ_PG_PERIODO_LOOKUPS",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "FACT_SOCIOECONOMICA_POSTULANTE"
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-07-04T16:50:53Z"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/crea_carga_full_institucion_educativa')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -2474,6 +4291,472 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/crea_carga_full_socioeconomica')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "REPLICA_SCHEMA.VIEW_DIM_PERIODO_COHORTE"
+							},
+							{
+								"name": "Destination",
+								"value": "container-ins-mat/vdirectory_dim_periodo/DIM_PERIODO.parquet"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "PostgreSqlV2Source"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "codigo_interno_periodo_cohorte",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										},
+										"sink": {
+											"name": "codigo_interno_periodo_cohorte",
+											"type": "Decimal",
+											"physicalType": "DECIMAL"
+										}
+									},
+									{
+										"source": {
+											"name": "periodo",
+											"type": "String",
+											"physicalType": "character varying"
+										},
+										"sink": {
+											"name": "periodo",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "indicador_par_impar",
+											"type": "String",
+											"physicalType": "character varying"
+										},
+										"sink": {
+											"name": "indicador_par_impar",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "anio_ini_periodo",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										},
+										"sink": {
+											"name": "anio_ini_periodo",
+											"type": "Decimal",
+											"physicalType": "DECIMAL"
+										}
+									},
+									{
+										"source": {
+											"name": "mes_ini_periodo",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										},
+										"sink": {
+											"name": "mes_ini_periodo",
+											"type": "Decimal",
+											"physicalType": "DECIMAL"
+										}
+									},
+									{
+										"source": {
+											"name": "fecha_inicio_periodo",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "fecha_inicio_periodo",
+											"type": "DateTime",
+											"physicalType": "INT_96"
+										}
+									},
+									{
+										"source": {
+											"name": "fecha_fin_periodo",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "fecha_fin_periodo",
+											"type": "DateTime",
+											"physicalType": "INT_96"
+										}
+									},
+									{
+										"source": {
+											"name": "tipo_periodo_cohorte",
+											"type": "String",
+											"physicalType": "character varying"
+										},
+										"sink": {
+											"name": "tipo_periodo_cohorte",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "aud_fecha_adicion",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "aud_fecha_adicion",
+											"type": "DateTime",
+											"physicalType": "INT_96"
+										}
+									},
+									{
+										"source": {
+											"name": "aud_fecha_modificacion",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "aud_fecha_modificacion",
+											"type": "DateTime",
+											"physicalType": "INT_96"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "VIEW_DIM_PERIODO",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DIM_PERIODO_PARQUET",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Copy data1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_periodo",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Copy data2",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Data flow1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "container-ins-mat/vdirectory_dim_postulante/POSTULANTES_FINAL.parquet"
+							},
+							{
+								"name": "Destination",
+								"value": "dwh_lookup.dim_postulante_alumno_lookup"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "ParquetSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "ParquetReadSettings"
+								}
+							},
+							"sink": {
+								"type": "AzurePostgreSqlSink",
+								"writeBatchSize": 1000000,
+								"writeBatchTimeout": "00:30:00",
+								"preCopyScript": "TRUNCATE TABLE dwh_lookup.dim_periodo_lookup;\n",
+								"writeMethod": "CopyCommand"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "codigo_interno_periodo_cohorte",
+											"type": "Int32",
+											"physicalType": "INT32"
+										},
+										"sink": {
+											"name": "codigo_interno_periodo",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										}
+									},
+									{
+										"source": {
+											"name": "periodo",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "periodo",
+											"type": "String",
+											"physicalType": "character varying"
+										}
+									},
+									{
+										"source": {
+											"name": "indicador_par_impar",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "indicador_par_impar",
+											"type": "String",
+											"physicalType": "character varying"
+										}
+									},
+									{
+										"source": {
+											"name": "anio_ini_periodo",
+											"type": "Int32",
+											"physicalType": "INT32"
+										},
+										"sink": {
+											"name": "anio_ini_periodo",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										}
+									},
+									{
+										"source": {
+											"name": "mes_ini_periodo",
+											"type": "Int32",
+											"physicalType": "INT32"
+										},
+										"sink": {
+											"name": "mes_ini_periodo",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										}
+									},
+									{
+										"source": {
+											"name": "fecha_inicio_periodo",
+											"type": "DateTime",
+											"physicalType": "DATE"
+										},
+										"sink": {
+											"name": "fecha_inicio_periodo",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "fecha_fin_periodo",
+											"type": "DateTime",
+											"physicalType": "DATE"
+										},
+										"sink": {
+											"name": "fecha_fin_periodo",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "tipo_periodo_cohorte",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "tipo_periodo",
+											"type": "String",
+											"physicalType": "character varying"
+										}
+									},
+									{
+										"source": {
+											"name": "aud_fecha_adicion",
+											"type": "DateTime",
+											"physicalType": "DATE"
+										},
+										"sink": {
+											"name": "fecha_adicion",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "aud_fecha_modificacion",
+											"type": "DateTime",
+											"physicalType": "DATE"
+										},
+										"sink": {
+											"name": "fecha_modificacion",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "HASH",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "hash",
+											"type": "String",
+											"physicalType": "text"
+										}
+									},
+									{
+										"source": {
+											"name": "FECHA_ULTIMA_ACTUALIZACION",
+											"type": "DateTime",
+											"physicalType": "DATE"
+										},
+										"sink": {
+											"name": "fecha_ultima_actualizacion",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "LINAJE",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "linaje",
+											"type": "String",
+											"physicalType": "text"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DIM_PERIODO_FINAL",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AZ_PG_PERIODO_LOOKUPS",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "DIM_SOCIOECONOMICA"
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-07-04T16:50:53Z"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/crea_df_fac_institucion_delta')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -4351,8 +6634,6 @@
 					{
 						"name": "Copy data2",
 						"type": "Copy",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "Data flow1",
@@ -5148,6 +7429,78 @@
 				"lastPublishTime": "2025-07-02T15:48:13Z"
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/OrquestadorDiario')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Execute Pipeline Delta Postulante",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"policy": {
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "crea_df_postulante_delta",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Execute Pipeline Delta Programa",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"policy": {
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "crea_df_programa_delta",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Execute Pipeline Delta Periodp",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"policy": {
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "crea_df_periodo_delta",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Orquestadores"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/crea_df_postulante_delta')]",
+				"[concat(variables('factoryId'), '/pipelines/crea_df_programa_delta')]",
+				"[concat(variables('factoryId'), '/pipelines/crea_df_periodo_delta')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/actualizalookuppostulante')]",
