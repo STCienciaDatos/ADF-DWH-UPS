@@ -18,7 +18,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "DIM_PERIODO_PARQUET",
+						"referenceName": "FAC_INSCRIPCION_PARQUET",
 						"type": "DatasetReference"
 					},
 					"name": "sink1",
@@ -88,8 +88,7 @@
 				"          LINAJE as string",
 				"     ),",
 				"     errors: true) ~> definciontipodecampo",
-				"derivedColumn derive(HASH = md5(concat(estado_inscripcion, toString(fecha_inscripcion), toString(fecha_aprobacion), jornada, tiene_matricula, tipo_inscripcion, vigencia_inscripcion, toString(codigo_interno_periodo), toString(codigo_interno_pos_alu), toString(codigo_interno_programa_academico), toString(aud_fecha_adicion), toString(aud_fecha_modificacion)))\r",
-				",",
+				"derivedColumn derive(HASH = md5(concat(estado_inscripcion, toString(fecha_inscripcion), toString(fecha_aprobacion), jornada, tiene_matricula, tipo_inscripcion, vigencia_inscripcion, toString(codigo_interno_periodo), toString(codigo_interno_pos_alu), toString(codigo_interno_programa_academico), toString(aud_fecha_adicion), toString(aud_fecha_modificacion))),",
 				"          FECHA_ULTIMA_ACTUALIZACION = currentTimestamp(),",
 				"          LINAJE = 'ins_alumno, cliente_local, ins_raza, ins_estado_civil') ~> actualizacionycreaciondelhash",
 				"actualizacionycreaciondelhash aggregate(groupBy(HASH),",
