@@ -370,8 +370,6 @@
 					{
 						"name": "Data flow1",
 						"type": "ExecuteDataFlow",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "Copy data1",
@@ -390,7 +388,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "df_periodo",
+								"referenceName": "df_inscripcion",
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
@@ -651,7 +649,7 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/VIEW_FACT_INSCRIPCION')]",
 				"[concat(variables('factoryId'), '/datasets/FAC_INSCRIPCION_PARQUET')]",
-				"[concat(variables('factoryId'), '/dataflows/df_periodo')]",
+				"[concat(variables('factoryId'), '/dataflows/df_inscripcion')]",
 				"[concat(variables('factoryId'), '/datasets/DIM_PERIODO_FINAL')]",
 				"[concat(variables('factoryId'), '/datasets/AZ_PG_PERIODO_LOOKUPS')]"
 			]
@@ -4768,8 +4766,6 @@
 					{
 						"name": "Data flow1",
 						"type": "ExecuteDataFlow",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "Copy data1",
@@ -4788,7 +4784,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "df_periodo",
+								"referenceName": "df_socioeconomica",
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
@@ -4807,8 +4803,6 @@
 					{
 						"name": "Copy data2",
 						"type": "Copy",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "Data flow1",
@@ -4850,7 +4844,7 @@
 								"type": "AzurePostgreSqlSink",
 								"writeBatchSize": 1000000,
 								"writeBatchTimeout": "00:30:00",
-								"preCopyScript": "TRUNCATE TABLE dwh_lookup.dim_periodo_lookup;\n",
+								"preCopyScript": "TRUNCATE TABLE dwh_lookup.dim_clasificacion_socieconomica;\n",
 								"writeMethod": "CopyCommand"
 							},
 							"enableStaging": false,
@@ -5023,14 +5017,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "DIM_PERIODO_FINAL",
+								"referenceName": "DIM_SOCIOECONOMICA_FINAL",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "AZ_PG_PERIODO_LOOKUPS",
+								"referenceName": "AZ_PG_SOCIOECONOMICA_LOOKUPS",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -5049,9 +5043,9 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/VIEW_DIM_SOCIOECONOMICA')]",
 				"[concat(variables('factoryId'), '/datasets/DIM_SOCIOECONOMICA_PARQUET')]",
-				"[concat(variables('factoryId'), '/dataflows/df_periodo')]",
-				"[concat(variables('factoryId'), '/datasets/DIM_PERIODO_FINAL')]",
-				"[concat(variables('factoryId'), '/datasets/AZ_PG_PERIODO_LOOKUPS')]"
+				"[concat(variables('factoryId'), '/dataflows/df_socioeconomica')]",
+				"[concat(variables('factoryId'), '/datasets/DIM_SOCIOECONOMICA_FINAL')]",
+				"[concat(variables('factoryId'), '/datasets/AZ_PG_SOCIOECONOMICA_LOOKUPS')]"
 			]
 		},
 		{
@@ -9013,6 +9007,70 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AZ_PG_SOCIOECONOMICA_LOOKUPS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AZURE_POG_DWH",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzurePostgreSqlTable",
+				"schema": [
+					{
+						"name": "id_dim_clasificacion_socioeconomica",
+						"type": "integer",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "codigo_interno_rango_ficha",
+						"type": "numeric",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "quintil",
+						"type": "numeric",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "descripcion_quintil",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "nivel",
+						"type": "character varying",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "rango_limite_inferior",
+						"type": "numeric",
+						"precision": 10,
+						"scale": 2
+					},
+					{
+						"name": "rango_limite_superior",
+						"type": "numeric",
+						"precision": 10,
+						"scale": 2
+					}
+				],
+				"typeProperties": {
+					"schema": "dwh_ups",
+					"table": "dim_clasificacion_socieconomica"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AZURE_POG_DWH')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DIM_INSTITUCION_FINAL')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -9291,6 +9349,35 @@
 						"type": "AzureBlobStorageLocation",
 						"fileName": "DIM_PROGRAMA_ACADEMICO_FINAL.parquet",
 						"folderPath": "vdirectory_dim_programa_academico",
+						"container": "container-ins-mat"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DIM_SOCIOECONOMICA_FINAL')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DIM_SOCIOECONOMICA"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "DIM_SOCIOECONOMICA_FINAL.parquet",
+						"folderPath": "vdirectory_dim_socioeconomica",
 						"container": "container-ins-mat"
 					},
 					"compressionCodec": "snappy"
@@ -9853,6 +9940,131 @@
 				"typeProperties": {}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_inscripcion')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "DF_INSCRIPCIONES_MATRICULAS/FAC_INSCRIPCION"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "FAC_INSCRIPCION_PARQUET",
+								"type": "DatasetReference"
+							},
+							"name": "source"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DIM_PERIODO_PARQUET",
+								"type": "DatasetReference"
+							},
+							"name": "sink1",
+							"description": "Export data to DIM_PERIODO_PARQUET"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn"
+						},
+						{
+							"name": "definciontipodecampo"
+						},
+						{
+							"name": "actualizacionycreaciondelhash"
+						},
+						{
+							"name": "verificaciondeduplicados"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          estado_inscripcion as string,",
+						"          fecha_inscripcion as timestamp,",
+						"          fecha_aprobacion as timestamp,",
+						"          jornada as string,",
+						"          tiene_matricula as string,",
+						"          tipo_inscripcion as string,",
+						"          vigencia_inscripcion as string,",
+						"          codigo_interno_periodo as decimal(38,18),",
+						"          codigo_interno_pos_alu as decimal(38,18),",
+						"          codigo_interno_programa_academico as string,",
+						"          aud_fecha_adicion as timestamp,",
+						"          aud_fecha_modificacion as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> source",
+						"source derive(estado_inscripcion = iifNull(estado_inscripcion, \"SIN DATO\"),",
+						"          fecha_inscripcion = iifNull(fecha_inscripcion, toTimestamp('1900-01-01T00:00:00Z')),",
+						"          fecha_aprobacion = iifNull(fecha_aprobacion, toTimestamp('1900-01-01T00:00:00Z')),",
+						"          jornada = iifNull(jornada, \"SIN DATO\"),",
+						"          tiene_matricula = iifNull(tiene_matricula, \"FALSE\"),",
+						"          tipo_inscripcion = iifNull(tipo_inscripcion, \"SIN DATO\"),",
+						"          vigencia_inscripcion = iifNull(vigencia_inscripcion, \"FALSE\"),",
+						"          codigo_interno_periodo = iifNull(codigo_interno_periodo, -1),",
+						"          codigo_interno_pos_alu = iifNull(codigo_interno_pos_alu, -1),",
+						"          codigo_interno_programa_academico = iifNull(codigo_interno_programa_academico, \"-1\"),",
+						"          aud_fecha_adicion = iif(    isNull(aud_fecha_adicion) || toString(aud_fecha_adicion) == '',    toDate('1900-01-01'),    toDate(toString(aud_fecha_adicion, 'yyyy-MM-dd'))),",
+						"          aud_fecha_modificacion = iif(    isNull(aud_fecha_modificacion) || toString(aud_fecha_modificacion) == '',    toDate('1900-01-01'),    toDate(toString(aud_fecha_modificacion, 'yyyy-MM-dd')))) ~> derivedColumn",
+						"verificaciondeduplicados cast(output(",
+						"          HASH as string,",
+						"          estado_inscripcion as string,",
+						"          fecha_inscripcion as date,",
+						"          fecha_aprobacion as date,",
+						"          jornada as string,",
+						"          tiene_matricula as boolean,",
+						"          tipo_inscripcion as string,",
+						"          vigencia_inscripcion as boolean,",
+						"          codigo_interno_periodo as integer,",
+						"          codigo_interno_pos_alu as integer,",
+						"          codigo_interno_programa_academico as integer,",
+						"          aud_fecha_adicion as date,",
+						"          aud_fecha_modificacion as date,",
+						"          FECHA_ULTIMA_ACTUALIZACION as date,",
+						"          LINAJE as string",
+						"     ),",
+						"     errors: true) ~> definciontipodecampo",
+						"derivedColumn derive(HASH = md5(concat(estado_inscripcion, toString(fecha_inscripcion), toString(fecha_aprobacion), jornada, tiene_matricula, tipo_inscripcion, vigencia_inscripcion, toString(codigo_interno_periodo), toString(codigo_interno_pos_alu), toString(codigo_interno_programa_academico), toString(aud_fecha_adicion), toString(aud_fecha_modificacion))),",
+						"          FECHA_ULTIMA_ACTUALIZACION = currentTimestamp(),",
+						"          LINAJE = 'ins_alumno, cliente_local, ins_raza, ins_estado_civil') ~> actualizacionycreaciondelhash",
+						"actualizacionycreaciondelhash aggregate(groupBy(HASH),",
+						"     estado_inscripcion = max(estado_inscripcion),",
+						"          fecha_inscripcion = max(fecha_inscripcion),",
+						"          fecha_aprobacion = max(fecha_aprobacion),",
+						"          jornada = max(jornada),",
+						"          tiene_matricula = max(tiene_matricula),",
+						"          tipo_inscripcion = max(tipo_inscripcion),",
+						"          vigencia_inscripcion = max(vigencia_inscripcion),",
+						"          codigo_interno_periodo = max(codigo_interno_periodo),",
+						"          codigo_interno_pos_alu = max(codigo_interno_pos_alu),",
+						"          codigo_interno_programa_academico = max(codigo_interno_programa_academico),",
+						"          aud_fecha_adicion = max(aud_fecha_adicion),",
+						"          aud_fecha_modificacion = max(LINAJE),",
+						"          FECHA_ULTIMA_ACTUALIZACION = max(FECHA_ULTIMA_ACTUALIZACION),",
+						"          LINAJE = max(LINAJE)) ~> verificaciondeduplicados",
+						"definciontipodecampo sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     partitionFileNames:['DIM_PERIODO_FINAL.parquet'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/FAC_INSCRIPCION_PARQUET')]",
+				"[concat(variables('factoryId'), '/datasets/DIM_PERIODO_PARQUET')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/df_institucion')]",
@@ -11246,6 +11458,114 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DIM_PROGRAMA_ACADEMICO')]",
 				"[concat(variables('factoryId'), '/datasets/DIM_PROGRAMA_ACADEMICO_FINAL')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_socioeconomica')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "DF_INSCRIPCIONES_MATRICULAS/DIM_SOCIOECONOMICA"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DIM_SOCIOECONOMICA_PARQUET",
+								"type": "DatasetReference"
+							},
+							"name": "source"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DIM_SOCIOECONOMICA_PARQUET",
+								"type": "DatasetReference"
+							},
+							"name": "sink1",
+							"description": "Export data to DIM_PERIODO_PARQUET"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn"
+						},
+						{
+							"name": "definciontipodecampo"
+						},
+						{
+							"name": "actualizacionycreaciondelhash"
+						},
+						{
+							"name": "verificaciondeduplicados"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          codigo_interno_rango_ficha as decimal(38,18),",
+						"          quintil as decimal(38,18),",
+						"          descripcion_quintil as string,",
+						"          nivel as string,",
+						"          raf_limite_inferior as decimal(38,18),",
+						"          raf_limite_superior as decimal(38,18),",
+						"          aud_fecha_adicion as timestamp,",
+						"          aud_fecha_modificacion as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> source",
+						"source derive(codigo_interno_rango_ficha = iifNull(codigo_interno_rango_ficha, -1),",
+						"          quintil = iifNull(quintil, -1),",
+						"          descripcion_quintil = iifNull(descripcion_quintil, \"SIN DATO\"),",
+						"          nivel = iifNull(nivel, \"SIN DATO\"),",
+						"          raf_limite_inferior = iifNull(raf_limite_inferior, -1),",
+						"          raf_limite_superior = iifNull(raf_limite_superior, -1),",
+						"          aud_fecha_adicion = iifNull(aud_fecha_adicion, toTimestamp('1900-01-01T00:00:00Z')),",
+						"          aud_fecha_modificacion = iif(    isNull(aud_fecha_modificacion) || toString(aud_fecha_modificacion) == '',    toDate('1900-01-01'),    toDate(toString(aud_fecha_modificacion, 'yyyy-MM-dd')))) ~> derivedColumn",
+						"verificaciondeduplicados cast(output(",
+						"          HASH as string,",
+						"          codigo_interno_rango_ficha as integer,",
+						"          quintil as integer,",
+						"          descripcion_quintil as string,",
+						"          nivel as string,",
+						"          raf_limite_inferior as integer,",
+						"          raf_limite_superior as integer,",
+						"          aud_fecha_adicion as date,",
+						"          aud_fecha_modificacion as date,",
+						"          FECHA_ULTIMA_ACTUALIZACION as date,",
+						"          LINAJE as string",
+						"     ),",
+						"     errors: true) ~> definciontipodecampo",
+						"derivedColumn derive(HASH = md5(concat(toString(codigo_interno_rango_ficha), toString(quintil), descripcion_quintil, nivel, toString(raf_limite_inferior), toString(raf_limite_superior), toString(aud_fecha_adicion), toString(aud_fecha_modificacion))),",
+						"          FECHA_ULTIMA_ACTUALIZACION = currentTimestamp(),",
+						"          LINAJE = 'ins_alumno, cliente_local, ins_raza, ins_estado_civil') ~> actualizacionycreaciondelhash",
+						"actualizacionycreaciondelhash aggregate(groupBy(HASH),",
+						"     codigo_interno_rango_ficha = max(codigo_interno_rango_ficha),",
+						"          quintil = max(quintil),",
+						"          descripcion_quintil = max(descripcion_quintil),",
+						"          nivel = max(nivel),",
+						"          raf_limite_inferior = max(raf_limite_inferior),",
+						"          raf_limite_superior = max(raf_limite_superior),",
+						"          aud_fecha_adicion = max(aud_fecha_adicion),",
+						"          aud_fecha_modificacion = max(aud_fecha_modificacion),",
+						"          FECHA_ULTIMA_ACTUALIZACION = max(FECHA_ULTIMA_ACTUALIZACION),",
+						"          LINAJE = max(LINAJE)) ~> verificaciondeduplicados",
+						"definciontipodecampo sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     partitionFileNames:['DIM_SOCIOECONOMICA_FINAL.parquet'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DIM_SOCIOECONOMICA_PARQUET')]"
 			]
 		}
 	]
