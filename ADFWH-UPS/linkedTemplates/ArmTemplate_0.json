@@ -1202,7 +1202,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/FAC_INSCRIPCION_PARQUET')]",
+			"name": "[concat(parameters('factoryName'), '/DIM_SOCIOECONOMICA_PARQUET')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1211,15 +1211,15 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "FAC_INSCRIPCION"
+					"name": "DIM_SOCIOECONOMICA"
 				},
 				"annotations": [],
 				"type": "Parquet",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "FAC_INSCRIPCION.parquet",
-						"folderPath": "vdirectory_fac_inscripcion ",
+						"fileName": "DIM_SOCIOECONOMICA.parquet",
+						"folderPath": "vdirectory_dim_socioeconomica",
 						"container": "container-ins-mat"
 					},
 					"compressionCodec": "snappy"

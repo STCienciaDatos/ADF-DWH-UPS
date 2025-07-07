@@ -9366,6 +9366,35 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DIM_SOCIOECONOMICA_PARQUET')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DIM_SOCIOECONOMICA"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "DIM_SOCIOECONOMICA.parquet",
+						"folderPath": "vdirectory_dim_socioeconomica",
+						"container": "container-ins-mat"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/FAC_INSCRIPCION_PARQUET')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -9471,6 +9500,35 @@
 						"type": "AzureBlobStorageLocation",
 						"fileName": "FAC_MATRICULA.parquet",
 						"folderPath": "vdirectory_fac_matricula",
+						"container": "container-ins-mat"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FAC_SOCIOECONOMICA_PARQUET')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "FAC_SOCIOECONOMICA_POSTULANTE"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "FAC_SOCIOECONOMICA.parquet",
+						"folderPath": "vdirectory_fac_socioeconomica",
 						"container": "container-ins-mat"
 					},
 					"compressionCodec": "snappy"
