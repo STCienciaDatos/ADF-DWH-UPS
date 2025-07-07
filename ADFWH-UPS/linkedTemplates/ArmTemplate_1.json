@@ -982,7 +982,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "DIM_PERIODO_PARQUET",
+								"referenceName": "FAC_INSCRIPCION_PARQUET",
 								"type": "DatasetReference"
 							},
 							"name": "sink1",

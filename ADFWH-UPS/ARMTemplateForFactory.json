@@ -9963,7 +9963,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "DIM_PERIODO_PARQUET",
+								"referenceName": "FAC_INSCRIPCION_PARQUET",
 								"type": "DatasetReference"
 							},
 							"name": "sink1",
@@ -10062,8 +10062,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/FAC_INSCRIPCION_PARQUET')]",
-				"[concat(variables('factoryId'), '/datasets/DIM_PERIODO_PARQUET')]"
+				"[concat(variables('factoryId'), '/datasets/FAC_INSCRIPCION_PARQUET')]"
 			]
 		},
 		{
