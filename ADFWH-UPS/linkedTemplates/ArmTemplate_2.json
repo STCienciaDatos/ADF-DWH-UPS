@@ -13,6 +13,230 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/df_institucion_procedencia_delta')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "DF_INSCRIPCIONES_MATRICULAS/FAC_INSTITUCION_PROCEDENCIA"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "FAC_INSTITUCION_PARQUET",
+								"type": "DatasetReference"
+							},
+							"name": "source"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "FAC_INSTITUCION_PARQUET",
+								"type": "DatasetReference"
+							},
+							"name": "sink1",
+							"description": "Export data to DIM_PERIODO_PARQUET"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn"
+						},
+						{
+							"name": "definciontipodecampo"
+						},
+						{
+							"name": "actualizacionycreaciondelhash"
+						},
+						{
+							"name": "verificaciondeduplicados"
+						},
+						{
+							"name": "filter1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          TITULO_BACHILLERATO as string,",
+						"          FECHA_GRADUACION as timestamp,",
+						"          CALIF_GRADUACION as decimal(38,18),",
+						"          CALIF_SOBRE as decimal(38,18),",
+						"          CODIGO_INTERNO_INS_EDU as decimal(38,18),",
+						"          CODIGO_INTERNO_POSTULANTE as decimal(38,18),",
+						"          AUD_FECHA_ADICION as timestamp,",
+						"          AUD_FECHA_MODIFICACION as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> source",
+						"source derive(TITULO_BACHILLERATO = iifNull(TITULO_BACHILLERATO, \"SIN DATO\"),",
+						"          FECHA_GRADUACION = iif(    isNull(FECHA_GRADUACION) || toString(FECHA_GRADUACION) == '',    toDate('1900-01-01'),    toDate(toString(FECHA_GRADUACION, 'yyyy-MM-dd'))),",
+						"          CALIF_GRADUACION = iifNull(CALIF_GRADUACION, -1),",
+						"          CALIF_SOBRE = iifNull(CALIF_SOBRE, -1),",
+						"          CODIGO_INTERNO_INS_EDU = iifNull(CODIGO_INTERNO_INS_EDU, -1),",
+						"          CODIGO_INTERNO_POSTULANTE = iifNull(CODIGO_INTERNO_POSTULANTE, -1),",
+						"          AUD_FECHA_ADICION = iifNull(AUD_FECHA_ADICION, toTimestamp('1900-01-01T00:00:00Z')),",
+						"          AUD_FECHA_MODIFICACION = iif(    isNull(AUD_FECHA_MODIFICACION) || toString(AUD_FECHA_MODIFICACION) == '',    toDate('1900-01-01'),    toDate(toString(AUD_FECHA_MODIFICACION, 'yyyy-MM-dd')))) ~> derivedColumn",
+						"filter1 cast(output(",
+						"          HASH as string,",
+						"          TITULO_BACHILLERATO as string,",
+						"          FECHA_GRADUACION as date,",
+						"          CALIF_GRADUACION as integer,",
+						"          CALIF_SOBRE as integer,",
+						"          CODIGO_INTERNO_INS_EDU as integer,",
+						"          CODIGO_INTERNO_POSTULANTE as integer,",
+						"          AUD_FECHA_ADICION as date,",
+						"          AUD_FECHA_MODIFICACION as date,",
+						"          FECHA_ULTIMA_ACTUALIZACION as date,",
+						"          LINAJE as string",
+						"     ),",
+						"     errors: true) ~> definciontipodecampo",
+						"derivedColumn derive(HASH = md5(concat(toString(TITULO_BACHILLERATO), TITULO_BACHILLERATO, toString(CALIF_GRADUACION), toString(CALIF_SOBRE), toString(CODIGO_INTERNO_INS_EDU), toString(CODIGO_INTERNO_POSTULANTE), toString(CODIGO_INTERNO_POSTULANTE), toString(AUD_FECHA_ADICION))),",
+						"          FECHA_ULTIMA_ACTUALIZACION = currentTimestamp(),",
+						"          LINAJE = 'ins_alumno, cliente_local, ins_raza, ins_estado_civil') ~> actualizacionycreaciondelhash",
+						"actualizacionycreaciondelhash aggregate(groupBy(HASH),",
+						"     TITULO_BACHILLERATO = max(TITULO_BACHILLERATO),",
+						"          FECHA_GRADUACION = max(FECHA_GRADUACION),",
+						"          CALIF_GRADUACION = max(CALIF_GRADUACION),",
+						"          CALIF_SOBRE = max(CALIF_SOBRE),",
+						"          CODIGO_INTERNO_INS_EDU = max(CODIGO_INTERNO_INS_EDU),",
+						"          CODIGO_INTERNO_POSTULANTE = max(CODIGO_INTERNO_POSTULANTE),",
+						"          AUD_FECHA_ADICION = max(AUD_FECHA_ADICION),",
+						"          AUD_FECHA_MODIFICACION = max(AUD_FECHA_MODIFICACION),",
+						"          FECHA_ULTIMA_ACTUALIZACION = max(FECHA_ULTIMA_ACTUALIZACION),",
+						"          LINAJE = max(LINAJE)) ~> verificaciondeduplicados",
+						"verificaciondeduplicados filter(AUD_FECHA_ADICION == FECHA_ULTIMA_ACTUALIZACION) ~> filter1",
+						"definciontipodecampo sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     partitionFileNames:['FAC_INSTITUCION_FINAL.parquet'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_periodo')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "DF_INSCRIPCIONES_MATRICULAS/DIM_PERIODO"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DIM_PERIODO_PARQUET",
+								"type": "DatasetReference"
+							},
+							"name": "source"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DIM_PERIODO_PARQUET",
+								"type": "DatasetReference"
+							},
+							"name": "sink1",
+							"description": "Export data to DIM_PERIODO_PARQUET"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn"
+						},
+						{
+							"name": "definciontipodecampo"
+						},
+						{
+							"name": "actualizacionycreaciondelhash"
+						},
+						{
+							"name": "verificaciondeduplicados"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          codigo_interno_periodo_cohorte as decimal(38,18),",
+						"          periodo as string,",
+						"          indicador_par_impar as string,",
+						"          anio_ini_periodo as decimal(38,18),",
+						"          mes_ini_periodo as decimal(38,18),",
+						"          fecha_inicio_periodo as timestamp,",
+						"          fecha_fin_periodo as timestamp,",
+						"          tipo_periodo_cohorte as string,",
+						"          aud_fecha_adicion as timestamp,",
+						"          aud_fecha_modificacion as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> source",
+						"source derive(codigo_interno_periodo_cohorte = iifNull(codigo_interno_periodo_cohorte, -1),",
+						"          periodo = iifNull(periodo, \"SIN DATO\"),",
+						"          indicador_par_impar = iifNull(indicador_par_impar, \"SIN DATO\"),",
+						"          anio_ini_periodo = iifNull(anio_ini_periodo, -1),",
+						"          mes_ini_periodo = iifNull(mes_ini_periodo, -1),",
+						"          fecha_inicio_periodo = iifNull(fecha_inicio_periodo, toTimestamp('1900-01-01T00:00:00Z')),",
+						"          fecha_fin_periodo = iifNull(fecha_fin_periodo, toTimestamp('1900-01-01T00:00:00Z')),",
+						"          tipo_periodo_cohorte = iifNull(tipo_periodo_cohorte, \"SIN DATO\"),",
+						"          aud_fecha_adicion = iifNull(aud_fecha_adicion, toTimestamp('1900-01-01T00:00:00Z')),",
+						"          aud_fecha_modificacion = iif(    isNull(aud_fecha_modificacion) || toString(aud_fecha_modificacion) == '',    toDate('1900-01-01'),    toDate(toString(aud_fecha_modificacion, 'yyyy-MM-dd')))) ~> derivedColumn",
+						"verificaciondeduplicados cast(output(",
+						"          HASH as string,",
+						"          codigo_interno_periodo_cohorte as integer,",
+						"          periodo as string,",
+						"          indicador_par_impar as string,",
+						"          anio_ini_periodo as integer,",
+						"          mes_ini_periodo as integer,",
+						"          fecha_inicio_periodo as date,",
+						"          fecha_fin_periodo as date,",
+						"          tipo_periodo_cohorte as string,",
+						"          aud_fecha_adicion as date,",
+						"          aud_fecha_modificacion as date,",
+						"          FECHA_ULTIMA_ACTUALIZACION as date,",
+						"          LINAJE as string",
+						"     ),",
+						"     errors: true) ~> definciontipodecampo",
+						"derivedColumn derive(HASH = md5(concat(toString(codigo_interno_periodo_cohorte), periodo, indicador_par_impar, toString(anio_ini_periodo), toString(mes_ini_periodo), toString(fecha_inicio_periodo), toString(fecha_fin_periodo), tipo_periodo_cohorte, toString(aud_fecha_adicion), toString(aud_fecha_modificacion))),",
+						"          FECHA_ULTIMA_ACTUALIZACION = currentTimestamp(),",
+						"          LINAJE = 'ins_alumno, cliente_local, ins_raza, ins_estado_civil') ~> actualizacionycreaciondelhash",
+						"actualizacionycreaciondelhash aggregate(groupBy(HASH),",
+						"     codigo_interno_periodo_cohorte = max(codigo_interno_periodo_cohorte),",
+						"          periodo = max(periodo),",
+						"          indicador_par_impar = max(indicador_par_impar),",
+						"          anio_ini_periodo = max(anio_ini_periodo),",
+						"          mes_ini_periodo = max(mes_ini_periodo),",
+						"          fecha_inicio_periodo = max(fecha_inicio_periodo),",
+						"          fecha_fin_periodo = max(fecha_fin_periodo),",
+						"          tipo_periodo_cohorte = max(tipo_periodo_cohorte),",
+						"          aud_fecha_adicion = max(aud_fecha_adicion),",
+						"          aud_fecha_modificacion = max(aud_fecha_modificacion),",
+						"          FECHA_ULTIMA_ACTUALIZACION = max(FECHA_ULTIMA_ACTUALIZACION),",
+						"          LINAJE = max(LINAJE)) ~> verificaciondeduplicados",
+						"definciontipodecampo sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     partitionFileNames:['DIM_PERIODO_FINAL.parquet'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/df_periodo_delta')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -1313,7 +1537,9 @@
 				"annotations": [],
 				"lastPublishTime": "2025-07-04T16:50:53Z"
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_periodo')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/crea_carga_full_fac_institucion')]",
@@ -2334,7 +2560,9 @@
 				"annotations": [],
 				"lastPublishTime": "2025-07-04T16:50:53Z"
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_periodo')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/crea_carga_full_fac_socioeconomica')]",
@@ -2356,11 +2584,11 @@
 						"userProperties": [
 							{
 								"name": "Source",
-								"value": "REPLICA_SCHEMA.VIEW_DIM_PERIODO_COHORTE"
+								"value": "REPLICA_SCHEMA.FT_FAC_CLA_SOCIOECONOMICA_POS_ALU"
 							},
 							{
 								"name": "Destination",
-								"value": "container-ins-mat/vdirectory_dim_periodo/DIM_PERIODO.parquet"
+								"value": "container-ins-mat/vdirectory_fac_socioeconomica/FAC_SOCIOECONOMICA.parquet"
 							}
 						],
 						"typeProperties": {
@@ -2382,120 +2610,72 @@
 								"mappings": [
 									{
 										"source": {
-											"name": "codigo_interno_periodo_cohorte",
+											"name": "CODIGO_INTERNO_PERIODO_VAL_FICHA",
 											"type": "Decimal",
 											"physicalType": "numeric"
 										},
 										"sink": {
-											"name": "codigo_interno_periodo_cohorte",
+											"name": "CODIGO_INTERNO_PERIODO_VAL_FICHA",
 											"type": "Decimal",
 											"physicalType": "DECIMAL"
 										}
 									},
 									{
 										"source": {
-											"name": "periodo",
-											"type": "String",
-											"physicalType": "character varying"
-										},
-										"sink": {
-											"name": "periodo",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "indicador_par_impar",
-											"type": "String",
-											"physicalType": "character varying"
-										},
-										"sink": {
-											"name": "indicador_par_impar",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "anio_ini_periodo",
+											"name": "CODIGO_INTERNO_POS_ALU",
 											"type": "Decimal",
 											"physicalType": "numeric"
 										},
 										"sink": {
-											"name": "anio_ini_periodo",
+											"name": "CODIGO_INTERNO_POS_ALU",
 											"type": "Decimal",
 											"physicalType": "DECIMAL"
 										}
 									},
 									{
 										"source": {
-											"name": "mes_ini_periodo",
+											"name": "CODIGO_INTERNO_RANGO_FICHA",
 											"type": "Decimal",
 											"physicalType": "numeric"
 										},
 										"sink": {
-											"name": "mes_ini_periodo",
+											"name": "CODIGO_INTERNO_RANGO_FICHA",
 											"type": "Decimal",
 											"physicalType": "DECIMAL"
 										}
 									},
 									{
 										"source": {
-											"name": "fecha_inicio_periodo",
+											"name": "VALORACION",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										},
+										"sink": {
+											"name": "VALORACION",
+											"type": "Decimal",
+											"physicalType": "DECIMAL"
+										}
+									},
+									{
+										"source": {
+											"name": "AUD_FECHA_ADICION",
 											"type": "DateTime",
 											"physicalType": "date"
 										},
 										"sink": {
-											"name": "fecha_inicio_periodo",
+											"name": "AUD_FECHA_ADICION",
 											"type": "DateTime",
 											"physicalType": "INT_96"
 										}
 									},
 									{
 										"source": {
-											"name": "fecha_fin_periodo",
+											"name": "AUD_FECHA_MODIFICACION",
 											"type": "DateTime",
 											"physicalType": "date"
 										},
 										"sink": {
-											"name": "fecha_fin_periodo",
-											"type": "DateTime",
-											"physicalType": "INT_96"
-										}
-									},
-									{
-										"source": {
-											"name": "tipo_periodo_cohorte",
-											"type": "String",
-											"physicalType": "character varying"
-										},
-										"sink": {
-											"name": "tipo_periodo_cohorte",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "aud_fecha_adicion",
-											"type": "DateTime",
-											"physicalType": "date"
-										},
-										"sink": {
-											"name": "aud_fecha_adicion",
-											"type": "DateTime",
-											"physicalType": "INT_96"
-										}
-									},
-									{
-										"source": {
-											"name": "aud_fecha_modificacion",
-											"type": "DateTime",
-											"physicalType": "date"
-										},
-										"sink": {
-											"name": "aud_fecha_modificacion",
+											"name": "AUD_FECHA_MODIFICACION",
 											"type": "DateTime",
 											"physicalType": "INT_96"
 										}
@@ -2510,14 +2690,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "VIEW_DIM_PERIODO",
+								"referenceName": "VIEW_FACT_SOCIOECONOMICA",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "DIM_PERIODO_PARQUET",
+								"referenceName": "FAC_SOCIOECONOMICA_PARQUET",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -2526,6 +2706,8 @@
 					{
 						"name": "Data flow1",
 						"type": "ExecuteDataFlow",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "Copy data1",
@@ -2563,6 +2745,8 @@
 					{
 						"name": "Copy data2",
 						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "Data flow1",
@@ -2800,7 +2984,9 @@
 				"annotations": [],
 				"lastPublishTime": "2025-07-04T16:50:53Z"
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_periodo')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/crea_carga_full_institucion_educativa')]",
@@ -3735,7 +3921,9 @@
 				"annotations": [],
 				"lastPublishTime": "2025-07-04T16:50:53Z"
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_periodo')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/crea_carga_full_postulante')]",
@@ -5287,11 +5475,11 @@
 						"userProperties": [
 							{
 								"name": "Source",
-								"value": "REPLICA_SCHEMA.VIEW_DIM_PERIODO_COHORTE"
+								"value": "REPLICA_SCHEMA.FT_DIM_CLASIFICACION_SOCIOECONOMICA"
 							},
 							{
 								"name": "Destination",
-								"value": "container-ins-mat/vdirectory_dim_periodo/DIM_PERIODO.parquet"
+								"value": "container-ins-mat/vdirectory_dim_socioeconomica/DIM_SOCIOECONOMICA.parquet"
 							}
 						],
 						"typeProperties": {
@@ -5313,98 +5501,74 @@
 								"mappings": [
 									{
 										"source": {
-											"name": "codigo_interno_periodo_cohorte",
+											"name": "codigo_interno_rango_ficha",
 											"type": "Decimal",
 											"physicalType": "numeric"
 										},
 										"sink": {
-											"name": "codigo_interno_periodo_cohorte",
+											"name": "codigo_interno_rango_ficha",
 											"type": "Decimal",
 											"physicalType": "DECIMAL"
 										}
 									},
 									{
 										"source": {
-											"name": "periodo",
-											"type": "String",
-											"physicalType": "character varying"
-										},
-										"sink": {
-											"name": "periodo",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "indicador_par_impar",
-											"type": "String",
-											"physicalType": "character varying"
-										},
-										"sink": {
-											"name": "indicador_par_impar",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "anio_ini_periodo",
+											"name": "quintil",
 											"type": "Decimal",
 											"physicalType": "numeric"
 										},
 										"sink": {
-											"name": "anio_ini_periodo",
+											"name": "quintil",
 											"type": "Decimal",
 											"physicalType": "DECIMAL"
 										}
 									},
 									{
 										"source": {
-											"name": "mes_ini_periodo",
+											"name": "descripcion_quintil",
+											"type": "String",
+											"physicalType": "character varying"
+										},
+										"sink": {
+											"name": "descripcion_quintil",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "nivel",
+											"type": "String",
+											"physicalType": "character varying"
+										},
+										"sink": {
+											"name": "nivel",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "raf_limite_inferior",
 											"type": "Decimal",
 											"physicalType": "numeric"
 										},
 										"sink": {
-											"name": "mes_ini_periodo",
+											"name": "raf_limite_inferior",
 											"type": "Decimal",
 											"physicalType": "DECIMAL"
 										}
 									},
 									{
 										"source": {
-											"name": "fecha_inicio_periodo",
-											"type": "DateTime",
-											"physicalType": "date"
+											"name": "raf_limite_superior",
+											"type": "Decimal",
+											"physicalType": "numeric"
 										},
 										"sink": {
-											"name": "fecha_inicio_periodo",
-											"type": "DateTime",
-											"physicalType": "INT_96"
-										}
-									},
-									{
-										"source": {
-											"name": "fecha_fin_periodo",
-											"type": "DateTime",
-											"physicalType": "date"
-										},
-										"sink": {
-											"name": "fecha_fin_periodo",
-											"type": "DateTime",
-											"physicalType": "INT_96"
-										}
-									},
-									{
-										"source": {
-											"name": "tipo_periodo_cohorte",
-											"type": "String",
-											"physicalType": "character varying"
-										},
-										"sink": {
-											"name": "tipo_periodo_cohorte",
-											"type": "String",
-											"physicalType": "UTF8"
+											"name": "raf_limite_superior",
+											"type": "Decimal",
+											"physicalType": "DECIMAL"
 										}
 									},
 									{
@@ -5441,14 +5605,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "VIEW_DIM_PERIODO",
+								"referenceName": "VIEW_DIM_SOCIOECONOMICA",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "DIM_PERIODO_PARQUET",
+								"referenceName": "DIM_SOCIOECONOMICA_PARQUET",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -5457,6 +5621,8 @@
 					{
 						"name": "Data flow1",
 						"type": "ExecuteDataFlow",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "Copy data1",
@@ -5494,6 +5660,8 @@
 					{
 						"name": "Copy data2",
 						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "Data flow1",
@@ -5731,7 +5899,9 @@
 				"annotations": [],
 				"lastPublishTime": "2025-07-04T16:50:53Z"
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_periodo')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/crea_df_fac_institucion_delta')]",
@@ -6149,7 +6319,9 @@
 				"annotations": [],
 				"lastPublishTime": "2025-07-02T15:26:10Z"
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_institucion_procedencia_delta')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/crea_df_institucion_educativa_delta')]",
@@ -7902,587 +8074,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/df_postulantes_delta')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/crea_df_programa_delta')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "VIEW_DIM_TO_PARQUET",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "REPLICA_SCHEMA.VIEW_DIM_PROGRAMA_ACADEMICO"
-							},
-							{
-								"name": "Destination",
-								"value": "container-ins-mat/vdirectory_dim_programa_academico/DIM_PROGRAMA_ACADEMICO.parquet"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "PostgreSqlV2Source",
-								"queryTimeout": "02:00:00"
-							},
-							"sink": {
-								"type": "ParquetSink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								},
-								"formatSettings": {
-									"type": "ParquetWriteSettings"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "codigo_interno_programa_academico",
-											"type": "String",
-											"physicalType": "character varying"
-										},
-										"sink": {
-											"name": "codigo_interno_programa_academico",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "carrera",
-											"type": "String",
-											"physicalType": "character varying"
-										},
-										"sink": {
-											"name": "carrera",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "sede",
-											"type": "String",
-											"physicalType": "character varying"
-										},
-										"sink": {
-											"name": "sede",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "campus",
-											"type": "String",
-											"physicalType": "character varying"
-										},
-										"sink": {
-											"name": "campus",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "duracion_en_semestres",
-											"type": "Int32",
-											"physicalType": "integer"
-										},
-										"sink": {
-											"name": "duracion_en_semestres",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "duracion_en_anios",
-											"type": "Decimal",
-											"physicalType": "numeric"
-										},
-										"sink": {
-											"name": "duracion_en_anios",
-											"type": "Decimal",
-											"physicalType": "DECIMAL"
-										}
-									},
-									{
-										"source": {
-											"name": "modalidad",
-											"type": "String",
-											"physicalType": "character varying"
-										},
-										"sink": {
-											"name": "modalidad",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "tipo_proyecto_educacion",
-											"type": "String",
-											"physicalType": "character varying"
-										},
-										"sink": {
-											"name": "tipo_proyecto_educacion",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "proyecto_educacion",
-											"type": "String",
-											"physicalType": "character varying"
-										},
-										"sink": {
-											"name": "proyecto_educacion",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "vigencia_proyecto_educacion",
-											"type": "String",
-											"physicalType": "character varying"
-										},
-										"sink": {
-											"name": "vigencia_proyecto_educacion",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "aud_fecha_adicion",
-											"type": "DateTime",
-											"physicalType": "date"
-										},
-										"sink": {
-											"name": "aud_fecha_adicion",
-											"type": "DateTime",
-											"physicalType": "INT_96"
-										}
-									},
-									{
-										"source": {
-											"name": "aud_fecha_modificacion",
-											"type": "DateTime",
-											"physicalType": "date"
-										},
-										"sink": {
-											"name": "aud_fecha_modificacion",
-											"type": "DateTime",
-											"physicalType": "INT_96"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "VIEW_PROGRAMA_ACADEMICO",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DIM_PROGRAMA_ACADEMICO",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Data flow1",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [
-							{
-								"activity": "VIEW_DIM_TO_PARQUET",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_programa_academico_delta",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"ParquePrrogramaFinal": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "Parquet_LookUPS",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Data flow1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "ParquetSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "ParquetReadSettings"
-								}
-							},
-							"sink": {
-								"type": "AzurePostgreSqlSink",
-								"writeBatchSize": 1000000,
-								"writeBatchTimeout": "00:30:00",
-								"writeMethod": "CopyCommand"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "codigo_interno_programa_academico",
-											"type": "String",
-											"physicalType": "UTF8"
-										},
-										"sink": {
-											"name": "codigo_interno_programa_academico",
-											"type": "String",
-											"physicalType": "character varying"
-										}
-									},
-									{
-										"source": {
-											"name": "carrera",
-											"type": "String",
-											"physicalType": "UTF8"
-										},
-										"sink": {
-											"name": "nombre_programa_academico",
-											"type": "String",
-											"physicalType": "character varying"
-										}
-									},
-									{
-										"source": {
-											"name": "sede",
-											"type": "String",
-											"physicalType": "UTF8"
-										},
-										"sink": {
-											"name": "sede_programa_academico",
-											"type": "String",
-											"physicalType": "character varying"
-										}
-									},
-									{
-										"source": {
-											"name": "campus",
-											"type": "String",
-											"physicalType": "UTF8"
-										},
-										"sink": {
-											"name": "campus_extension_programa_academico",
-											"type": "String",
-											"physicalType": "character varying"
-										}
-									},
-									{
-										"source": {
-											"name": "duracion_en_semestres",
-											"type": "Int32",
-											"physicalType": "INT32"
-										},
-										"sink": {
-											"name": "duracion_programa_semestres",
-											"type": "Decimal",
-											"physicalType": "numeric"
-										}
-									},
-									{
-										"source": {
-											"name": "duracion_en_anios",
-											"type": "Decimal",
-											"physicalType": "DECIMAL",
-											"scale": 2,
-											"precision": 18
-										},
-										"sink": {
-											"name": "duracion_programa_anio",
-											"type": "Decimal",
-											"physicalType": "numeric"
-										}
-									},
-									{
-										"source": {
-											"name": "modalidad",
-											"type": "String",
-											"physicalType": "UTF8"
-										},
-										"sink": {
-											"name": "modalidad_programa_academico",
-											"type": "String",
-											"physicalType": "character varying"
-										}
-									},
-									{
-										"source": {
-											"name": "tipo_proyecto_educacion",
-											"type": "String",
-											"physicalType": "UTF8"
-										},
-										"sink": {
-											"name": "tipo_proyecto_educacion",
-											"type": "String",
-											"physicalType": "character varying"
-										}
-									},
-									{
-										"source": {
-											"name": "proyecto_educacion",
-											"type": "String",
-											"physicalType": "UTF8"
-										},
-										"sink": {
-											"name": "proyecto_educacion",
-											"type": "String",
-											"physicalType": "character varying"
-										}
-									},
-									{
-										"source": {
-											"name": "vigencia_proyecto_educacion",
-											"type": "Boolean",
-											"physicalType": "BOOLEAN"
-										},
-										"sink": {
-											"name": "vigencia_proyecto_educacion",
-											"type": "Boolean",
-											"physicalType": "boolean"
-										}
-									},
-									{
-										"source": {
-											"name": "aud_fecha_adicion",
-											"type": "DateTime",
-											"physicalType": "DATE"
-										},
-										"sink": {
-											"name": "fecha_adicion",
-											"type": "DateTime",
-											"physicalType": "date"
-										}
-									},
-									{
-										"source": {
-											"name": "aud_fecha_modificacion",
-											"type": "DateTime",
-											"physicalType": "DATE"
-										},
-										"sink": {
-											"name": "fecha_modificacion",
-											"type": "DateTime",
-											"physicalType": "date"
-										}
-									},
-									{
-										"source": {
-											"name": "HASH",
-											"type": "String",
-											"physicalType": "UTF8"
-										},
-										"sink": {
-											"name": "hash",
-											"type": "String",
-											"physicalType": "text"
-										}
-									},
-									{
-										"source": {
-											"name": "FECHA_ULTIMA_ACTUALIZACION",
-											"type": "DateTime",
-											"physicalType": "INT96"
-										},
-										"sink": {
-											"name": "fecha_ultima_modificacion",
-											"type": "DateTime",
-											"physicalType": "date"
-										}
-									},
-									{
-										"source": {
-											"name": "LINAJE",
-											"type": "String",
-											"physicalType": "UTF8"
-										},
-										"sink": {
-											"name": "linaje",
-											"type": "String",
-											"physicalType": "text"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "DIM_PROGRAMA_ACADEMICO_FINAL",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "AZ_PG_PROGRAMA_ACADEMICO_LOOUKPS",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "DIM_PROGRAMA_ACADEMICO"
-				},
-				"annotations": [],
-				"lastPublishTime": "2025-07-02T15:48:13Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/df_programa_academico_delta')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/OrquestadorDiario')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Execute Pipeline Delta Postulante",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "crea_df_postulante_delta",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Execute Pipeline Delta Programa",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "crea_df_programa_delta",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Execute Pipeline Delta Periodp",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "crea_df_periodo_delta",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "Orquestadores"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/crea_df_postulante_delta')]",
-				"[concat(variables('factoryId'), '/pipelines/crea_df_programa_delta')]",
-				"[concat(variables('factoryId'), '/pipelines/crea_df_periodo_delta')]"
 			]
 		}
 	]

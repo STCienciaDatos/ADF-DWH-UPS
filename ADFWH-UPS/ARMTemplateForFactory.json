@@ -1709,11 +1709,11 @@
 						"userProperties": [
 							{
 								"name": "Source",
-								"value": "REPLICA_SCHEMA.VIEW_DIM_PERIODO_COHORTE"
+								"value": "REPLICA_SCHEMA.FT_FAC_CLA_SOCIOECONOMICA_POS_ALU"
 							},
 							{
 								"name": "Destination",
-								"value": "container-ins-mat/vdirectory_dim_periodo/DIM_PERIODO.parquet"
+								"value": "container-ins-mat/vdirectory_fac_socioeconomica/FAC_SOCIOECONOMICA.parquet"
 							}
 						],
 						"typeProperties": {
@@ -1735,120 +1735,72 @@
 								"mappings": [
 									{
 										"source": {
-											"name": "codigo_interno_periodo_cohorte",
+											"name": "CODIGO_INTERNO_PERIODO_VAL_FICHA",
 											"type": "Decimal",
 											"physicalType": "numeric"
 										},
 										"sink": {
-											"name": "codigo_interno_periodo_cohorte",
+											"name": "CODIGO_INTERNO_PERIODO_VAL_FICHA",
 											"type": "Decimal",
 											"physicalType": "DECIMAL"
 										}
 									},
 									{
 										"source": {
-											"name": "periodo",
-											"type": "String",
-											"physicalType": "character varying"
-										},
-										"sink": {
-											"name": "periodo",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "indicador_par_impar",
-											"type": "String",
-											"physicalType": "character varying"
-										},
-										"sink": {
-											"name": "indicador_par_impar",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "anio_ini_periodo",
+											"name": "CODIGO_INTERNO_POS_ALU",
 											"type": "Decimal",
 											"physicalType": "numeric"
 										},
 										"sink": {
-											"name": "anio_ini_periodo",
+											"name": "CODIGO_INTERNO_POS_ALU",
 											"type": "Decimal",
 											"physicalType": "DECIMAL"
 										}
 									},
 									{
 										"source": {
-											"name": "mes_ini_periodo",
+											"name": "CODIGO_INTERNO_RANGO_FICHA",
 											"type": "Decimal",
 											"physicalType": "numeric"
 										},
 										"sink": {
-											"name": "mes_ini_periodo",
+											"name": "CODIGO_INTERNO_RANGO_FICHA",
 											"type": "Decimal",
 											"physicalType": "DECIMAL"
 										}
 									},
 									{
 										"source": {
-											"name": "fecha_inicio_periodo",
+											"name": "VALORACION",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										},
+										"sink": {
+											"name": "VALORACION",
+											"type": "Decimal",
+											"physicalType": "DECIMAL"
+										}
+									},
+									{
+										"source": {
+											"name": "AUD_FECHA_ADICION",
 											"type": "DateTime",
 											"physicalType": "date"
 										},
 										"sink": {
-											"name": "fecha_inicio_periodo",
+											"name": "AUD_FECHA_ADICION",
 											"type": "DateTime",
 											"physicalType": "INT_96"
 										}
 									},
 									{
 										"source": {
-											"name": "fecha_fin_periodo",
+											"name": "AUD_FECHA_MODIFICACION",
 											"type": "DateTime",
 											"physicalType": "date"
 										},
 										"sink": {
-											"name": "fecha_fin_periodo",
-											"type": "DateTime",
-											"physicalType": "INT_96"
-										}
-									},
-									{
-										"source": {
-											"name": "tipo_periodo_cohorte",
-											"type": "String",
-											"physicalType": "character varying"
-										},
-										"sink": {
-											"name": "tipo_periodo_cohorte",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "aud_fecha_adicion",
-											"type": "DateTime",
-											"physicalType": "date"
-										},
-										"sink": {
-											"name": "aud_fecha_adicion",
-											"type": "DateTime",
-											"physicalType": "INT_96"
-										}
-									},
-									{
-										"source": {
-											"name": "aud_fecha_modificacion",
-											"type": "DateTime",
-											"physicalType": "date"
-										},
-										"sink": {
-											"name": "aud_fecha_modificacion",
+											"name": "AUD_FECHA_MODIFICACION",
 											"type": "DateTime",
 											"physicalType": "INT_96"
 										}
@@ -1863,14 +1815,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "VIEW_DIM_PERIODO",
+								"referenceName": "VIEW_FACT_SOCIOECONOMICA",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "DIM_PERIODO_PARQUET",
+								"referenceName": "FAC_SOCIOECONOMICA_PARQUET",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -1879,6 +1831,8 @@
 					{
 						"name": "Data flow1",
 						"type": "ExecuteDataFlow",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "Copy data1",
@@ -1916,6 +1870,8 @@
 					{
 						"name": "Copy data2",
 						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "Data flow1",
@@ -2154,8 +2110,8 @@
 				"lastPublishTime": "2025-07-04T16:50:53Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/VIEW_DIM_PERIODO')]",
-				"[concat(variables('factoryId'), '/datasets/DIM_PERIODO_PARQUET')]",
+				"[concat(variables('factoryId'), '/datasets/VIEW_FACT_SOCIOECONOMICA')]",
+				"[concat(variables('factoryId'), '/datasets/FAC_SOCIOECONOMICA_PARQUET')]",
 				"[concat(variables('factoryId'), '/dataflows/df_periodo')]",
 				"[concat(variables('factoryId'), '/datasets/DIM_PERIODO_FINAL')]",
 				"[concat(variables('factoryId'), '/datasets/AZ_PG_PERIODO_LOOKUPS')]"
@@ -4666,11 +4622,11 @@
 						"userProperties": [
 							{
 								"name": "Source",
-								"value": "REPLICA_SCHEMA.VIEW_DIM_PERIODO_COHORTE"
+								"value": "REPLICA_SCHEMA.FT_DIM_CLASIFICACION_SOCIOECONOMICA"
 							},
 							{
 								"name": "Destination",
-								"value": "container-ins-mat/vdirectory_dim_periodo/DIM_PERIODO.parquet"
+								"value": "container-ins-mat/vdirectory_dim_socioeconomica/DIM_SOCIOECONOMICA.parquet"
 							}
 						],
 						"typeProperties": {
@@ -4692,98 +4648,74 @@
 								"mappings": [
 									{
 										"source": {
-											"name": "codigo_interno_periodo_cohorte",
+											"name": "codigo_interno_rango_ficha",
 											"type": "Decimal",
 											"physicalType": "numeric"
 										},
 										"sink": {
-											"name": "codigo_interno_periodo_cohorte",
+											"name": "codigo_interno_rango_ficha",
 											"type": "Decimal",
 											"physicalType": "DECIMAL"
 										}
 									},
 									{
 										"source": {
-											"name": "periodo",
-											"type": "String",
-											"physicalType": "character varying"
-										},
-										"sink": {
-											"name": "periodo",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "indicador_par_impar",
-											"type": "String",
-											"physicalType": "character varying"
-										},
-										"sink": {
-											"name": "indicador_par_impar",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "anio_ini_periodo",
+											"name": "quintil",
 											"type": "Decimal",
 											"physicalType": "numeric"
 										},
 										"sink": {
-											"name": "anio_ini_periodo",
+											"name": "quintil",
 											"type": "Decimal",
 											"physicalType": "DECIMAL"
 										}
 									},
 									{
 										"source": {
-											"name": "mes_ini_periodo",
+											"name": "descripcion_quintil",
+											"type": "String",
+											"physicalType": "character varying"
+										},
+										"sink": {
+											"name": "descripcion_quintil",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "nivel",
+											"type": "String",
+											"physicalType": "character varying"
+										},
+										"sink": {
+											"name": "nivel",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "raf_limite_inferior",
 											"type": "Decimal",
 											"physicalType": "numeric"
 										},
 										"sink": {
-											"name": "mes_ini_periodo",
+											"name": "raf_limite_inferior",
 											"type": "Decimal",
 											"physicalType": "DECIMAL"
 										}
 									},
 									{
 										"source": {
-											"name": "fecha_inicio_periodo",
-											"type": "DateTime",
-											"physicalType": "date"
+											"name": "raf_limite_superior",
+											"type": "Decimal",
+											"physicalType": "numeric"
 										},
 										"sink": {
-											"name": "fecha_inicio_periodo",
-											"type": "DateTime",
-											"physicalType": "INT_96"
-										}
-									},
-									{
-										"source": {
-											"name": "fecha_fin_periodo",
-											"type": "DateTime",
-											"physicalType": "date"
-										},
-										"sink": {
-											"name": "fecha_fin_periodo",
-											"type": "DateTime",
-											"physicalType": "INT_96"
-										}
-									},
-									{
-										"source": {
-											"name": "tipo_periodo_cohorte",
-											"type": "String",
-											"physicalType": "character varying"
-										},
-										"sink": {
-											"name": "tipo_periodo_cohorte",
-											"type": "String",
-											"physicalType": "UTF8"
+											"name": "raf_limite_superior",
+											"type": "Decimal",
+											"physicalType": "DECIMAL"
 										}
 									},
 									{
@@ -4820,14 +4752,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "VIEW_DIM_PERIODO",
+								"referenceName": "VIEW_DIM_SOCIOECONOMICA",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "DIM_PERIODO_PARQUET",
+								"referenceName": "DIM_SOCIOECONOMICA_PARQUET",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -4836,6 +4768,8 @@
 					{
 						"name": "Data flow1",
 						"type": "ExecuteDataFlow",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "Copy data1",
@@ -4873,6 +4807,8 @@
 					{
 						"name": "Copy data2",
 						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "Data flow1",
@@ -5111,8 +5047,8 @@
 				"lastPublishTime": "2025-07-04T16:50:53Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/VIEW_DIM_PERIODO')]",
-				"[concat(variables('factoryId'), '/datasets/DIM_PERIODO_PARQUET')]",
+				"[concat(variables('factoryId'), '/datasets/VIEW_DIM_SOCIOECONOMICA')]",
+				"[concat(variables('factoryId'), '/datasets/DIM_SOCIOECONOMICA_PARQUET')]",
 				"[concat(variables('factoryId'), '/dataflows/df_periodo')]",
 				"[concat(variables('factoryId'), '/datasets/DIM_PERIODO_FINAL')]",
 				"[concat(variables('factoryId'), '/datasets/AZ_PG_PERIODO_LOOKUPS')]"
@@ -9609,6 +9545,27 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/VIEW_DIM_SOCIOECONOMICA')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "CONNECT_REPLICA_PROD_UPS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "PostgreSqlV2Table",
+				"schema": [],
+				"typeProperties": {
+					"schema": "REPLICA_SCHEMA",
+					"table": "FT_DIM_CLASIFICACION_SOCIOECONOMICA"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/CONNECT_REPLICA_PROD_UPS')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/VIEW_FACT_INSCRIPCION')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -9644,6 +9601,27 @@
 				"typeProperties": {
 					"schema": "REPLICA_SCHEMA",
 					"table": "FT_FAC_MATRICULA_PAGOS"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/CONNECT_REPLICA_PROD_UPS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/VIEW_FACT_SOCIOECONOMICA')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "CONNECT_REPLICA_PROD_UPS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "PostgreSqlV2Table",
+				"schema": [],
+				"typeProperties": {
+					"schema": "REPLICA_SCHEMA",
+					"table": "FT_FAC_CLA_SOCIOECONOMICA_POS_ALU"
 				}
 			},
 			"dependsOn": [
