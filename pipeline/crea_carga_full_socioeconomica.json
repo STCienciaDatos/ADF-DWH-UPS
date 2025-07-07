@@ -160,8 +160,6 @@
 			{
 				"name": "Data flow1",
 				"type": "ExecuteDataFlow",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Copy data1",
@@ -193,8 +191,6 @@
 			{
 				"name": "Copy data2",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Data flow1",
@@ -236,7 +232,7 @@
 						"type": "AzurePostgreSqlSink",
 						"writeBatchSize": 1000000,
 						"writeBatchTimeout": "00:30:00",
-						"preCopyScript": "TRUNCATE TABLE dwh_lookup.dim_periodo_lookup;\n",
+						"preCopyScript": "TRUNCATE TABLE dwh_lookup.dim_clasificacion_socieconomica;\n",
 						"writeMethod": "CopyCommand"
 					},
 					"enableStaging": false,
@@ -409,13 +405,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "DIM_PERIODO_FINAL",
+						"referenceName": "DIM_SOCIOECONOMICA_FINAL",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "AZ_PG_PERIODO_LOOKUPS",
+						"referenceName": "AZ_PG_SOCIOECONOMICA_LOOKUPS",
 						"type": "DatasetReference"
 					}
 				]
