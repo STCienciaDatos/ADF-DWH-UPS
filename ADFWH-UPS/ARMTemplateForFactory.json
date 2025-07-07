@@ -176,11 +176,11 @@
 						"userProperties": [
 							{
 								"name": "Source",
-								"value": "REPLICA_SCHEMA.VIEW_DIM_PERIODO_COHORTE"
+								"value": "REPLICA_SCHEMA.FT_FAC_INSCRIPCION"
 							},
 							{
 								"name": "Destination",
-								"value": "container-ins-mat/vdirectory_dim_periodo/DIM_PERIODO.parquet"
+								"value": "container-ins-mat/vdirectory_fac_inscripcion /FAC_INSCRIPCION.parquet"
 							}
 						],
 						"typeProperties": {
@@ -202,96 +202,120 @@
 								"mappings": [
 									{
 										"source": {
-											"name": "codigo_interno_periodo_cohorte",
-											"type": "Decimal",
-											"physicalType": "numeric"
-										},
-										"sink": {
-											"name": "codigo_interno_periodo_cohorte",
-											"type": "Decimal",
-											"physicalType": "DECIMAL"
-										}
-									},
-									{
-										"source": {
-											"name": "periodo",
+											"name": "estado_inscripcion",
 											"type": "String",
 											"physicalType": "character varying"
 										},
 										"sink": {
-											"name": "periodo",
+											"name": "estado_inscripcion",
 											"type": "String",
 											"physicalType": "UTF8"
 										}
 									},
 									{
 										"source": {
-											"name": "indicador_par_impar",
+											"name": "fecha_inscripcion",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "fecha_inscripcion",
+											"type": "DateTime",
+											"physicalType": "INT_96"
+										}
+									},
+									{
+										"source": {
+											"name": "fecha_aprobacion",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "fecha_aprobacion",
+											"type": "DateTime",
+											"physicalType": "INT_96"
+										}
+									},
+									{
+										"source": {
+											"name": "jornada",
 											"type": "String",
 											"physicalType": "character varying"
 										},
 										"sink": {
-											"name": "indicador_par_impar",
+											"name": "jornada",
 											"type": "String",
 											"physicalType": "UTF8"
 										}
 									},
 									{
 										"source": {
-											"name": "anio_ini_periodo",
-											"type": "Decimal",
-											"physicalType": "numeric"
-										},
-										"sink": {
-											"name": "anio_ini_periodo",
-											"type": "Decimal",
-											"physicalType": "DECIMAL"
-										}
-									},
-									{
-										"source": {
-											"name": "mes_ini_periodo",
-											"type": "Decimal",
-											"physicalType": "numeric"
-										},
-										"sink": {
-											"name": "mes_ini_periodo",
-											"type": "Decimal",
-											"physicalType": "DECIMAL"
-										}
-									},
-									{
-										"source": {
-											"name": "fecha_inicio_periodo",
-											"type": "DateTime",
-											"physicalType": "date"
-										},
-										"sink": {
-											"name": "fecha_inicio_periodo",
-											"type": "DateTime",
-											"physicalType": "INT_96"
-										}
-									},
-									{
-										"source": {
-											"name": "fecha_fin_periodo",
-											"type": "DateTime",
-											"physicalType": "date"
-										},
-										"sink": {
-											"name": "fecha_fin_periodo",
-											"type": "DateTime",
-											"physicalType": "INT_96"
-										}
-									},
-									{
-										"source": {
-											"name": "tipo_periodo_cohorte",
+											"name": "tiene_matricula",
 											"type": "String",
 											"physicalType": "character varying"
 										},
 										"sink": {
-											"name": "tipo_periodo_cohorte",
+											"name": "tiene_matricula",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "tipo_inscripcion",
+											"type": "String",
+											"physicalType": "character varying"
+										},
+										"sink": {
+											"name": "tipo_inscripcion",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "vigencia_inscripcion",
+											"type": "String",
+											"physicalType": "character varying"
+										},
+										"sink": {
+											"name": "vigencia_inscripcion",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "codigo_interno_periodo",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										},
+										"sink": {
+											"name": "codigo_interno_periodo",
+											"type": "Decimal",
+											"physicalType": "DECIMAL"
+										}
+									},
+									{
+										"source": {
+											"name": "codigo_interno_pos_alu",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										},
+										"sink": {
+											"name": "codigo_interno_pos_alu",
+											"type": "Decimal",
+											"physicalType": "DECIMAL"
+										}
+									},
+									{
+										"source": {
+											"name": "codigo_interno_programa_academico",
+											"type": "String",
+											"physicalType": "character varying"
+										},
+										"sink": {
+											"name": "codigo_interno_programa_academico",
 											"type": "String",
 											"physicalType": "UTF8"
 										}
@@ -330,14 +354,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "VIEW_DIM_PERIODO",
+								"referenceName": "VIEW_FACT_INSCRIPCION",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "DIM_PERIODO_PARQUET",
+								"referenceName": "FAC_INSCRIPCION_PARQUET",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -346,6 +370,8 @@
 					{
 						"name": "Data flow1",
 						"type": "ExecuteDataFlow",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "Copy data1",
@@ -383,6 +409,8 @@
 					{
 						"name": "Copy data2",
 						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "Data flow1",
@@ -621,8 +649,8 @@
 				"lastPublishTime": "2025-07-04T16:50:53Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/VIEW_DIM_PERIODO')]",
-				"[concat(variables('factoryId'), '/datasets/DIM_PERIODO_PARQUET')]",
+				"[concat(variables('factoryId'), '/datasets/VIEW_FACT_INSCRIPCION')]",
+				"[concat(variables('factoryId'), '/datasets/FAC_INSCRIPCION_PARQUET')]",
 				"[concat(variables('factoryId'), '/dataflows/df_periodo')]",
 				"[concat(variables('factoryId'), '/datasets/DIM_PERIODO_FINAL')]",
 				"[concat(variables('factoryId'), '/datasets/AZ_PG_PERIODO_LOOKUPS')]"
@@ -9338,6 +9366,35 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/FAC_INSCRIPCION_PARQUET')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "FAC_INSCRIPCION"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "FAC_INSCRIPCION.parquet",
+						"folderPath": "vdirectory_fac_inscripcion ",
+						"container": "container-ins-mat"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/FAC_INSTITUCION_FINAL')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -9487,6 +9544,27 @@
 				"typeProperties": {
 					"schema": "REPLICA_SCHEMA",
 					"table": "VIEW_DIM_POSTULANTE_ALUMNO"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/CONNECT_REPLICA_PROD_UPS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/VIEW_FACT_INSCRIPCION')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "CONNECT_REPLICA_PROD_UPS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "PostgreSqlV2Table",
+				"schema": [],
+				"typeProperties": {
+					"schema": "REPLICA_SCHEMA",
+					"table": "FT_FAC_INSCRIPCION"
 				}
 			},
 			"dependsOn": [

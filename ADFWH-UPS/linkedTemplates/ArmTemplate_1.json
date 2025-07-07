@@ -45,6 +45,33 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/FAC_INSTITUCION_FINAL')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "FAC_INSTITUCION_PROCEDENCIA"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "FAC_INSTITUCION_FINAL.parquet",
+						"folderPath": "vdirectory_fac_institucion",
+						"container": "container-ins-mat"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/FAC_INSTITUCION_PARQUET')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -690,6 +717,27 @@
 				"typeProperties": {
 					"schema": "REPLICA_SCHEMA",
 					"table": "VIEW_DIM_POSTULANTE_ALUMNO"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/CONNECT_REPLICA_PROD_UPS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/VIEW_FACT_INSCRIPCION')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "CONNECT_REPLICA_PROD_UPS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "PostgreSqlV2Table",
+				"schema": [],
+				"typeProperties": {
+					"schema": "REPLICA_SCHEMA",
+					"table": "FT_FAC_INSCRIPCION"
 				}
 			},
 			"dependsOn": [
@@ -1650,367 +1698,6 @@
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
 						"     partitionBy('hash', 1)) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_postulantes_full')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"folder": {
-					"name": "DF_INSCRIPCIONES_MATRICULAS/DIM_POSTULANTES"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "DIM_POSTULANTE_PARQUET",
-								"type": "DatasetReference"
-							},
-							"name": "source"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "DIM_POSTULANTE_PARQUET_FINAL",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "derivedColumn2"
-						},
-						{
-							"name": "vericacionduplicados"
-						},
-						{
-							"name": "definciontipodecampo"
-						},
-						{
-							"name": "actualizacionycreaciondelhash"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          codigo_interno_pos_alu as integer,",
-						"          tipo_identificacion as string,",
-						"          nro_identificacion as string,",
-						"          nombres as string,",
-						"          apellidos as string,",
-						"          correo_personal as string,",
-						"          correo_institucional as string,",
-						"          genero as string,",
-						"          etnia as string,",
-						"          estado_civil as string,",
-						"          fecha_nacimiento as timestamp,",
-						"          telefono as string,",
-						"          celular as string,",
-						"          indicador_extranjero as string,",
-						"          nacionalidad as string,",
-						"          tiene_discapacidad as string,",
-						"          sufre_enfermedad_catastrofica as string,",
-						"          estudiante_tiene_trastorno_aprendizaje as string,",
-						"          pais_nacimiento as string,",
-						"          region_nacimiento as string,",
-						"          provincia_nacimiento as string,",
-						"          ciudad_nacimiento as string,",
-						"          parroquia_nacimiento as string,",
-						"          pais_residencia as string,",
-						"          region_residencia as string,",
-						"          provincia_residencia as string,",
-						"          ciudad_residencia as string,",
-						"          parroquia_residencia as string,",
-						"          direccion_calle_principal as string,",
-						"          direccion_calle_secundaria as string,",
-						"          barrio_sector as string,",
-						"          aud_fecha_adicion as timestamp,",
-						"          aud_fecha_modificacion as timestamp",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false,",
-						"     format: 'parquet') ~> source",
-						"source derive(codigo_interno_pos_alu = iifNull(codigo_interno_pos_alu, -1),",
-						"          tipo_identificacion = iifNull(tipo_identificacion, \"SIN DATO\"),",
-						"          nro_identificacion = iifNull(nro_identificacion, \"SIN DATO\"),",
-						"          nombres = iifNull(nombres, \"SIN DATO\"),",
-						"          apellidos = iifNull(apellidos, \"SIN DATO\"),",
-						"          correo_personal = iifNull(correo_personal, \"SIN DATO\"),",
-						"          correo_institucional = iifNull(correo_institucional, \"SIN DATO\"),",
-						"          genero = iifNull(genero, \"SIN DATO\"),",
-						"          etnia = iifNull(etnia, \"SIN DATO\"),",
-						"          estado_civil = iifNull(estado_civil, \"SIN DATO\"),",
-						"          fecha_nacimiento = iifNull(fecha_nacimiento, toTimestamp('1900-01-01T00:00:00Z')),",
-						"          telefono = iifNull(telefono, \"SIN DATO\"),",
-						"          celular = iifNull(celular, \"SIN DATO\"),",
-						"          indicador_extranjero = iifNull(indicador_extranjero, \"FALSE\"),",
-						"          nacionalidad = iifNull(nacionalidad, \"SIN DATO\"),",
-						"          tiene_discapacidad = iifNull(tiene_discapacidad, \"FALSE\"),",
-						"          sufre_enfermedad_catastrofica = iifNull(sufre_enfermedad_catastrofica, \"FALSE\"),",
-						"          estudiante_tiene_trastorno_aprendizaje = iifNull(estudiante_tiene_trastorno_aprendizaje, \"FALSE\"),",
-						"          pais_nacimiento = iifNull(pais_nacimiento, \"SIN DATO\"),",
-						"          region_nacimiento = iifNull(region_nacimiento, \"SIN DATO\"),",
-						"          provincia_nacimiento = iifNull(provincia_nacimiento, \"SIN DATO\"),",
-						"          ciudad_nacimiento = iifNull(ciudad_nacimiento, \"SIN DATO\"),",
-						"          parroquia_nacimiento = iifNull(parroquia_nacimiento, \"SIN DATO\"),",
-						"          pais_residencia = iifNull(pais_residencia, \"SIN DATO\"),",
-						"          region_residencia = iifNull(region_residencia, \"SIN DATO\"),",
-						"          provincia_residencia = iifNull(provincia_residencia, \"SIN DATO\"),",
-						"          ciudad_residencia = iifNull(ciudad_residencia, \"SIN DATO\"),",
-						"          parroquia_residencia = iifNull(parroquia_residencia, \"SIN DATO\"),",
-						"          direccion_calle_principal = iif(or(isNull(direccion_calle_principal), equals(direccion_calle_principal, \".\")), \"SIN DATO\", direccion_calle_principal),",
-						"          direccion_calle_secundaria = iif(or(isNull(direccion_calle_secundaria), equals(direccion_calle_secundaria, \".\")), \"SIN DATO\", direccion_calle_secundaria),",
-						"          barrio_sector = iif(or(isNull(barrio_sector), equals(barrio_sector, \".\")), \"SIN DATO\", barrio_sector),",
-						"          aud_fecha_adicion = iif(",
-						"    isNull(aud_fecha_adicion) || toString(aud_fecha_adicion) == '',",
-						"    toDate('1900-01-01'),",
-						"    toDate(toString(aud_fecha_adicion, 'yyyy-MM-dd'))",
-						"),",
-						"          aud_fecha_modificacion = iif(",
-						"    isNull(aud_fecha_modificacion) || toString(aud_fecha_modificacion) == '',",
-						"    toDate('1900-01-01'),",
-						"    toDate(toString(aud_fecha_modificacion, 'yyyy-MM-dd'))",
-						")) ~> derivedColumn2",
-						"actualizacionycreaciondelhash aggregate(groupBy(HASH),",
-						"     codigo_interno_pos_alu = max(codigo_interno_pos_alu),",
-						"          tipo_identificacion = max(tipo_identificacion),",
-						"          nro_identificacion = max(nro_identificacion),",
-						"          nombres = max(nombres),",
-						"          apellidos = max(apellidos),",
-						"          correo_personal = max(correo_personal),",
-						"          correo_institucional = max(correo_institucional),",
-						"          genero = max(genero),",
-						"          etnia = max(etnia),",
-						"          estado_civil = max(estado_civil),",
-						"          fecha_nacimiento = max(fecha_nacimiento),",
-						"          telefono = max(telefono),",
-						"          celular = max(celular),",
-						"          indicador_extranjero = max(indicador_extranjero),",
-						"          nacionalidad = max(nacionalidad),",
-						"          tiene_discapacidad = max(tiene_discapacidad),",
-						"          sufre_enfermedad_catastrofica = max(sufre_enfermedad_catastrofica),",
-						"          estudiante_tiene_trastorno_aprendizaje = max(estudiante_tiene_trastorno_aprendizaje),",
-						"          pais_nacimiento = max(pais_nacimiento),",
-						"          region_nacimiento = max(region_nacimiento),",
-						"          provincia_nacimiento = max(provincia_nacimiento),",
-						"          ciudad_nacimiento = max(ciudad_nacimiento),",
-						"          parroquia_nacimiento = max(parroquia_nacimiento),",
-						"          pais_residencia = max(pais_residencia),",
-						"          region_residencia = max(region_residencia),",
-						"          provincia_residencia = max(provincia_residencia),",
-						"          ciudad_residencia = max(ciudad_residencia),",
-						"          parroquia_residencia = max(parroquia_residencia),",
-						"          direccion_calle_principal = max(direccion_calle_principal),",
-						"          direccion_calle_secundaria = max(direccion_calle_secundaria),",
-						"          barrio_sector = max(barrio_sector),",
-						"          aud_fecha_adicion = max(aud_fecha_adicion),",
-						"          aud_fecha_modificacion = max(aud_fecha_modificacion),",
-						"          FECHA_ULTIMA_ACTUALIZACION = max(FECHA_ULTIMA_ACTUALIZACION),",
-						"          LINAJE = max(LINAJE)) ~> vericacionduplicados",
-						"vericacionduplicados cast(output(",
-						"          HASH as string,",
-						"          codigo_interno_pos_alu as integer,",
-						"          indicador_extranjero as boolean,",
-						"          tiene_discapacidad as boolean,",
-						"          sufre_enfermedad_catastrofica as boolean,",
-						"          estudiante_tiene_trastorno_aprendizaje as boolean,",
-						"          aud_fecha_adicion as date,",
-						"          aud_fecha_modificacion as date,",
-						"          FECHA_ULTIMA_ACTUALIZACION as date,",
-						"          LINAJE as string",
-						"     ),",
-						"     errors: true) ~> definciontipodecampo",
-						"derivedColumn2 derive(HASH = md5(concat(toString(codigo_interno_pos_alu),",
-						"tipo_identificacion,",
-						"nro_identificacion,",
-						"nombres,",
-						"apellidos,",
-						"correo_personal,",
-						"correo_institucional,",
-						"genero,",
-						"etnia,",
-						"estado_civil,",
-						"toString(fecha_nacimiento),",
-						"telefono,",
-						"celular,",
-						"toString(indicador_extranjero), ",
-						"nacionalidad, ",
-						"toString(tiene_discapacidad), ",
-						"toString(sufre_enfermedad_catastrofica),",
-						"toString(estudiante_tiene_trastorno_aprendizaje), ",
-						"pais_nacimiento,",
-						"region_nacimiento,",
-						"provincia_nacimiento,",
-						"ciudad_nacimiento,",
-						"parroquia_nacimiento,",
-						"pais_residencia,",
-						"region_residencia,",
-						"provincia_residencia,",
-						"ciudad_residencia,",
-						"parroquia_residencia,",
-						"direccion_calle_principal,",
-						"direccion_calle_secundaria,",
-						"barrio_sector,",
-						"toString(aud_fecha_adicion), ",
-						"toString(aud_fecha_modificacion))),",
-						"          FECHA_ULTIMA_ACTUALIZACION = currentTimestamp(),",
-						"          LINAJE = 'ins_alumno, cliente_local, ins_raza, ins_estado_civil') ~> actualizacionycreaciondelhash",
-						"definciontipodecampo sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          Hash as string,",
-						"          PK_PERSONA as integer,",
-						"          TIPO_IDENTIFICACION_PERSONA as string,",
-						"          NOMBRES_PERSONA as string,",
-						"          PRIMER_APELLIDO_PERSONA as string,",
-						"          SEGUNDO_APELLIDO_PERSONA as string,",
-						"          CORREO_PERSONA as string,",
-						"          TELEFONO_PERSONA as string,",
-						"          GENERO_PERSONA as string,",
-						"          INDICADOR_EXTRANJERO_PERSONA as string,",
-						"          INDICADOR_DISCAPACIDAD_PERSONA as string,",
-						"          TIPO_DISCAPACIDAD_PERSONA as string,",
-						"          FECHA_NACIMIENTO_PERSONA as timestamp,",
-						"          DateUpdate as timestamp",
-						"     ),",
-						"     format: 'parquet',",
-						"     partitionFileNames:['POSTULANTES_FINAL.parquet'],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     partitionBy('hash', 1)) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_programa_academico_delta')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"folder": {
-					"name": "DF_INSCRIPCIONES_MATRICULAS/DIM_PROGRAMA_ACADEMICO"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "DIM_PROGRAMA_ACADEMICO",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "DIM_PROGRAMA_ACADEMICO_FINAL",
-								"type": "DatasetReference"
-							},
-							"name": "ParquePrrogramaFinal"
-						}
-					],
-					"transformations": [
-						{
-							"name": "IffNull"
-						},
-						{
-							"name": "HashLinajeActualizacion"
-						},
-						{
-							"name": "aggregate1"
-						},
-						{
-							"name": "definciontipodecampo"
-						},
-						{
-							"name": "Formatos"
-						},
-						{
-							"name": "filter1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          codigo_interno_programa_academico as string,",
-						"          carrera as string,",
-						"          sede as string,",
-						"          campus as string,",
-						"          duracion_en_semestres as integer,",
-						"          duracion_en_anios as decimal(38,18),",
-						"          modalidad as string,",
-						"          tipo_proyecto_educacion as string,",
-						"          proyecto_educacion as string,",
-						"          vigencia_proyecto_educacion as string,",
-						"          aud_fecha_adicion as timestamp,",
-						"          aud_fecha_modificacion as timestamp",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false,",
-						"     format: 'parquet',",
-						"     partitionBy('hash', 1)) ~> source1",
-						"source1 derive(codigo_interno_programa_academico = iifNull(codigo_interno_programa_academico, 'SIN DATO'),",
-						"          carrera = iifNull(carrera, 'SIN DATO'),",
-						"          sede = iifNull(sede, 'SIN DATO'),",
-						"          campus = iifNull(campus, 'SIN DATO'),",
-						"          duracion_en_semestres = iifNull(duracion_en_semestres, -1),",
-						"          duracion_en_anios = iifNull(duracion_en_anios, -1),",
-						"          modalidad = iifNull(modalidad, 'SIN DATO'),",
-						"          tipo_proyecto_educacion = iifNull(tipo_proyecto_educacion, 'SIN DATO'),",
-						"          proyecto_educacion = iifNull(proyecto_educacion, 'SIN DATO'),",
-						"          vigencia_proyecto_educacion = iifNull(vigencia_proyecto_educacion, 'SIN DATO'),",
-						"          aud_fecha_adicion = iif(    isNull(aud_fecha_adicion) || toString(aud_fecha_adicion) == '',    toDate('1900-01-01'),    toDate(toString(aud_fecha_adicion, 'yyyy-MM-dd'))),",
-						"          aud_fecha_modificacion = iif(    isNull(aud_fecha_modificacion) || toString(aud_fecha_modificacion) == '',    toDate('1900-01-01'),    toDate(toString(aud_fecha_modificacion, 'yyyy-MM-dd')))) ~> IffNull",
-						"Formatos derive(HASH = md5(concat(codigo_interno_programa_academico,carrera,sede,",
-						"campus,toString(duracion_en_semestres), toString(duracion_en_anios),modalidad,",
-						"tipo_proyecto_educacion,proyecto_educacion,toString(vigencia_proyecto_educacion), ",
-						"toString(aud_fecha_adicion), toString(aud_fecha_modificacion))),",
-						"          FECHA_ULTIMA_ACTUALIZACION = toDate(currentTimestamp()),",
-						"          LINAJE = 'ped.ped_tipo_proyecto_educacion , ped.ped_proyecto_educacion, org.org_descripcion_estructura, org.org_estructura, ped.ped_des_est_pro_edu, ped.ped_mod_pro_edu, ped.ped_modalidad, ped.ped_est_mod_pro_edu') ~> HashLinajeActualizacion",
-						"HashLinajeActualizacion aggregate(groupBy(HASH),",
-						"     codigo_interno_programa_academico = max(codigo_interno_programa_academico),",
-						"          carrera = max(carrera),",
-						"          sede = max(sede),",
-						"          campus = max(campus),",
-						"          duracion_en_semestres = max(duracion_en_semestres),",
-						"          duracion_en_anios = max(duracion_en_anios),",
-						"          modalidad = max(modalidad),",
-						"          tipo_proyecto_educacion = max(tipo_proyecto_educacion),",
-						"          proyecto_educacion = max(proyecto_educacion),",
-						"          vigencia_proyecto_educacion = max(vigencia_proyecto_educacion),",
-						"          aud_fecha_adicion = max(aud_fecha_adicion),",
-						"          aud_fecha_modificacion = max(aud_fecha_modificacion),",
-						"          FECHA_ULTIMA_ACTUALIZACION = max(FECHA_ULTIMA_ACTUALIZACION),",
-						"          LINAJE = max(LINAJE)) ~> aggregate1",
-						"filter1 cast(output(",
-						"          HASH as string,",
-						"          codigo_interno_programa_academico as string,",
-						"          vigencia_proyecto_educacion as boolean,",
-						"          aud_fecha_adicion as date,",
-						"          aud_fecha_modificacion as date,",
-						"          LINAJE as string",
-						"     ),",
-						"     errors: true) ~> definciontipodecampo",
-						"IffNull derive(duracion_en_anios = toDecimal(duracion_en_anios, 18, 2),",
-						"          vigencia_proyecto_educacion = toBoolean(vigencia_proyecto_educacion)) ~> Formatos",
-						"aggregate1 filter(aud_fecha_modificacion == FECHA_ULTIMA_ACTUALIZACION",
-						"|| aud_fecha_adicion== FECHA_ULTIMA_ACTUALIZACION) ~> filter1",
-						"definciontipodecampo sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     format: 'parquet',",
-						"     partitionFileNames:['DIM_PROGRAMA_ACADEMICO_FINAL.parquet'],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     partitionBy('hash', 1)) ~> ParquePrrogramaFinal"
 					]
 				}
 			},
