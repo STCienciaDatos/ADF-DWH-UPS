@@ -1,0 +1,25 @@
+{
+	"name": "FAC_MATRICULA_PARQUET",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "FAC_MATRICULA"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "FAC_MATRICULA.parquet",
+				"folderPath": "vdirectory_fac_matricula",
+				"container": "container-ins-mat"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

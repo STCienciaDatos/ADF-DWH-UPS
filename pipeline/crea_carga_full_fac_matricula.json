@@ -16,11 +16,11 @@
 				"userProperties": [
 					{
 						"name": "Source",
-						"value": "REPLICA_SCHEMA.VIEW_DIM_PERIODO_COHORTE"
+						"value": "REPLICA_SCHEMA.FT_FAC_MATRICULA_PAGOS"
 					},
 					{
 						"name": "Destination",
-						"value": "container-ins-mat/vdirectory_dim_periodo/DIM_PERIODO.parquet"
+						"value": "container-ins-mat/vdirectory_fac_matricula/FAC_MATRICULA.parquet"
 					}
 				],
 				"typeProperties": {
@@ -42,96 +42,228 @@
 						"mappings": [
 							{
 								"source": {
-									"name": "codigo_interno_periodo_cohorte",
-									"type": "Decimal",
-									"physicalType": "numeric"
-								},
-								"sink": {
-									"name": "codigo_interno_periodo_cohorte",
-									"type": "Decimal",
-									"physicalType": "DECIMAL"
-								}
-							},
-							{
-								"source": {
-									"name": "periodo",
-									"type": "String",
-									"physicalType": "character varying"
-								},
-								"sink": {
-									"name": "periodo",
-									"type": "String",
-									"physicalType": "UTF8"
-								}
-							},
-							{
-								"source": {
-									"name": "indicador_par_impar",
-									"type": "String",
-									"physicalType": "character varying"
-								},
-								"sink": {
-									"name": "indicador_par_impar",
-									"type": "String",
-									"physicalType": "UTF8"
-								}
-							},
-							{
-								"source": {
-									"name": "anio_ini_periodo",
-									"type": "Decimal",
-									"physicalType": "numeric"
-								},
-								"sink": {
-									"name": "anio_ini_periodo",
-									"type": "Decimal",
-									"physicalType": "DECIMAL"
-								}
-							},
-							{
-								"source": {
-									"name": "mes_ini_periodo",
-									"type": "Decimal",
-									"physicalType": "numeric"
-								},
-								"sink": {
-									"name": "mes_ini_periodo",
-									"type": "Decimal",
-									"physicalType": "DECIMAL"
-								}
-							},
-							{
-								"source": {
-									"name": "fecha_inicio_periodo",
+									"name": "fecha_matricula",
 									"type": "DateTime",
 									"physicalType": "date"
 								},
 								"sink": {
-									"name": "fecha_inicio_periodo",
+									"name": "fecha_matricula",
 									"type": "DateTime",
 									"physicalType": "INT_96"
 								}
 							},
 							{
 								"source": {
-									"name": "fecha_fin_periodo",
-									"type": "DateTime",
-									"physicalType": "date"
-								},
-								"sink": {
-									"name": "fecha_fin_periodo",
-									"type": "DateTime",
-									"physicalType": "INT_96"
-								}
-							},
-							{
-								"source": {
-									"name": "tipo_periodo_cohorte",
+									"name": "estado_matricula",
 									"type": "String",
 									"physicalType": "character varying"
 								},
 								"sink": {
-									"name": "tipo_periodo_cohorte",
+									"name": "estado_matricula",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "tipo_proceso_matricula",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "tipo_proceso_matricula",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "tipo_matricula",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "tipo_matricula",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "nivel",
+									"type": "Decimal",
+									"physicalType": "numeric"
+								},
+								"sink": {
+									"name": "nivel",
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
+								}
+							},
+							{
+								"source": {
+									"name": "jornada",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "jornada",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "num_primeras_matriculas",
+									"type": "Decimal",
+									"physicalType": "numeric"
+								},
+								"sink": {
+									"name": "num_primeras_matriculas",
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
+								}
+							},
+							{
+								"source": {
+									"name": "num_segundas_matriculas",
+									"type": "Decimal",
+									"physicalType": "numeric"
+								},
+								"sink": {
+									"name": "num_segundas_matriculas",
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
+								}
+							},
+							{
+								"source": {
+									"name": "monto_total",
+									"type": "Decimal",
+									"physicalType": "numeric"
+								},
+								"sink": {
+									"name": "monto_total",
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
+								}
+							},
+							{
+								"source": {
+									"name": "saldo_dia",
+									"type": "Decimal",
+									"physicalType": "numeric"
+								},
+								"sink": {
+									"name": "saldo_dia",
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
+								}
+							},
+							{
+								"source": {
+									"name": "forma_pago",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "forma_pago",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "nro_cuotas",
+									"type": "Decimal",
+									"physicalType": "numeric"
+								},
+								"sink": {
+									"name": "nro_cuotas",
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
+								}
+							},
+							{
+								"source": {
+									"name": "cuotas_pagadas",
+									"type": "Decimal",
+									"physicalType": "numeric"
+								},
+								"sink": {
+									"name": "cuotas_pagadas",
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
+								}
+							},
+							{
+								"source": {
+									"name": "cuotas_pendientes",
+									"type": "Decimal",
+									"physicalType": "numeric"
+								},
+								"sink": {
+									"name": "cuotas_pendientes",
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
+								}
+							},
+							{
+								"source": {
+									"name": "cuotas_vencidas",
+									"type": "Decimal",
+									"physicalType": "numeric"
+								},
+								"sink": {
+									"name": "cuotas_vencidas",
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
+								}
+							},
+							{
+								"source": {
+									"name": "estudiante_nuevo_antiguo",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "estudiante_nuevo_antiguo",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "codigo_interno_periodo",
+									"type": "Decimal",
+									"physicalType": "numeric"
+								},
+								"sink": {
+									"name": "codigo_interno_periodo",
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
+								}
+							},
+							{
+								"source": {
+									"name": "codigo_interno_pos_alu",
+									"type": "Decimal",
+									"physicalType": "numeric"
+								},
+								"sink": {
+									"name": "codigo_interno_pos_alu",
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
+								}
+							},
+							{
+								"source": {
+									"name": "codigo_interno_programa_academico",
+									"type": "String",
+									"physicalType": "character varying"
+								},
+								"sink": {
+									"name": "codigo_interno_programa_academico",
 									"type": "String",
 									"physicalType": "UTF8"
 								}
@@ -176,7 +308,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "DIM_PERIODO_PARQUET",
+						"referenceName": "FAC_MATRICULA_PARQUET",
 						"type": "DatasetReference"
 					}
 				]
@@ -184,6 +316,8 @@
 			{
 				"name": "Data flow1",
 				"type": "ExecuteDataFlow",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Copy data1",
@@ -215,6 +349,8 @@
 			{
 				"name": "Copy data2",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Data flow1",
