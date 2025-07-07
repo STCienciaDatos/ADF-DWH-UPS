@@ -1,0 +1,99 @@
+{
+	"name": "df_socioeconomica",
+	"properties": {
+		"folder": {
+			"name": "DF_INSCRIPCIONES_MATRICULAS/DIM_SOCIOECONOMICA"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DIM_SOCIOECONOMICA_PARQUET",
+						"type": "DatasetReference"
+					},
+					"name": "source"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DIM_PERIODO_PARQUET",
+						"type": "DatasetReference"
+					},
+					"name": "sink1",
+					"description": "Export data to DIM_PERIODO_PARQUET"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn"
+				},
+				{
+					"name": "definciontipodecampo"
+				},
+				{
+					"name": "actualizacionycreaciondelhash"
+				},
+				{
+					"name": "verificaciondeduplicados"
+				}
+			],
+			"scriptLines": [
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> source",
+				"source derive(codigo_interno_periodo_cohorte = iifNull(codigo_interno_periodo_cohorte, -1),",
+				"          periodo = iifNull(periodo, \"SIN DATO\"),",
+				"          indicador_par_impar = iifNull(indicador_par_impar, \"SIN DATO\"),",
+				"          anio_ini_periodo = iifNull(anio_ini_periodo, -1),",
+				"          mes_ini_periodo = iifNull(mes_ini_periodo, -1),",
+				"          fecha_inicio_periodo = iifNull(fecha_inicio_periodo, toTimestamp('1900-01-01T00:00:00Z')),",
+				"          fecha_fin_periodo = iifNull(fecha_fin_periodo, toTimestamp('1900-01-01T00:00:00Z')),",
+				"          tipo_periodo_cohorte = iifNull(tipo_periodo_cohorte, \"SIN DATO\"),",
+				"          aud_fecha_adicion = iifNull(aud_fecha_adicion, toTimestamp('1900-01-01T00:00:00Z')),",
+				"          aud_fecha_modificacion = iif(    isNull(aud_fecha_modificacion) || toString(aud_fecha_modificacion) == '',    toDate('1900-01-01'),    toDate(toString(aud_fecha_modificacion, 'yyyy-MM-dd')))) ~> derivedColumn",
+				"verificaciondeduplicados cast(output(",
+				"          HASH as string,",
+				"          codigo_interno_periodo_cohorte as integer,",
+				"          periodo as string,",
+				"          indicador_par_impar as string,",
+				"          anio_ini_periodo as integer,",
+				"          mes_ini_periodo as integer,",
+				"          fecha_inicio_periodo as date,",
+				"          fecha_fin_periodo as date,",
+				"          tipo_periodo_cohorte as string,",
+				"          aud_fecha_adicion as date,",
+				"          aud_fecha_modificacion as date,",
+				"          FECHA_ULTIMA_ACTUALIZACION as date,",
+				"          LINAJE as string",
+				"     ),",
+				"     errors: true) ~> definciontipodecampo",
+				"derivedColumn derive(HASH = md5(concat(toString(codigo_interno_periodo_cohorte), periodo, indicador_par_impar, toString(anio_ini_periodo), toString(mes_ini_periodo), toString(fecha_inicio_periodo), toString(fecha_fin_periodo), tipo_periodo_cohorte, toString(aud_fecha_adicion), toString(aud_fecha_modificacion))),",
+				"          FECHA_ULTIMA_ACTUALIZACION = currentTimestamp(),",
+				"          LINAJE = 'ins_alumno, cliente_local, ins_raza, ins_estado_civil') ~> actualizacionycreaciondelhash",
+				"actualizacionycreaciondelhash aggregate(groupBy(HASH),",
+				"     codigo_interno_periodo_cohorte = max(codigo_interno_periodo_cohorte),",
+				"          periodo = max(periodo),",
+				"          indicador_par_impar = max(indicador_par_impar),",
+				"          anio_ini_periodo = max(anio_ini_periodo),",
+				"          mes_ini_periodo = max(mes_ini_periodo),",
+				"          fecha_inicio_periodo = max(fecha_inicio_periodo),",
+				"          fecha_fin_periodo = max(fecha_fin_periodo),",
+				"          tipo_periodo_cohorte = max(tipo_periodo_cohorte),",
+				"          aud_fecha_adicion = max(aud_fecha_adicion),",
+				"          aud_fecha_modificacion = max(aud_fecha_modificacion),",
+				"          FECHA_ULTIMA_ACTUALIZACION = max(FECHA_ULTIMA_ACTUALIZACION),",
+				"          LINAJE = max(LINAJE)) ~> verificaciondeduplicados",
+				"definciontipodecampo sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     partitionFileNames:['DIM_PERIODO_FINAL.parquet'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}
