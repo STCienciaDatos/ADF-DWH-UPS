@@ -1,0 +1,25 @@
+{
+	"name": "FAC_INSCRIPCION_PARQUET",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "FAC_INSCRIPCION"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "FAC_INSCRIPCION.parquet",
+				"folderPath": "vdirectory_fac_inscripcion ",
+				"container": "container-ins-mat"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
