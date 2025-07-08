@@ -1,0 +1,89 @@
+{
+	"name": "AZ_PG_INSCRIPCIONES_LOOKUPS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzurePostgreSql1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzurePostgreSqlTable",
+		"schema": [
+			{
+				"name": "id_dim_clas_socioeconomica_lookup",
+				"type": "integer",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "codigo_interno_rango_ficha",
+				"type": "numeric",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "quintil",
+				"type": "numeric",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "descripcion_quintil",
+				"type": "character varying",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "nivel",
+				"type": "character varying",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "rango_limite_inferior",
+				"type": "numeric",
+				"precision": 5,
+				"scale": 2
+			},
+			{
+				"name": "rango_limite_superior",
+				"type": "numeric",
+				"precision": 5,
+				"scale": 2
+			},
+			{
+				"name": "fecha_adicion",
+				"type": "date",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "fecha_modificacion",
+				"type": "date",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "hash",
+				"type": "text",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "fecha_ultima_modificacion",
+				"type": "date",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "linaje",
+				"type": "text",
+				"precision": 0,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "dwh_lookup",
+			"table": "fact_inscripcion_lookup"
+		}
+	}
+}

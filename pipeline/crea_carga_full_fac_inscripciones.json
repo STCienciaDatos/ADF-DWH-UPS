@@ -282,7 +282,7 @@
 						"type": "AzurePostgreSqlSink",
 						"writeBatchSize": 1000000,
 						"writeBatchTimeout": "00:30:00",
-						"preCopyScript": "TRUNCATE TABLE dwh_lookup.dim_periodo_lookup;\n",
+						"preCopyScript": "TRUNCATE TABLE dwh_lookup.fact_inscripcion_lookup;\n",
 						"writeMethod": "CopyCommand"
 					},
 					"enableStaging": false,
@@ -455,13 +455,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "DIM_PERIODO_FINAL",
+						"referenceName": "FAC_INSCRIPCION_FINAL",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "AZ_PG_PERIODO_LOOKUPS",
+						"referenceName": "AZ_PG_INSCRIPCIONES_LOOKUPS",
 						"type": "DatasetReference"
 					}
 				]
