@@ -21,8 +21,7 @@
 						"referenceName": "FAC_INSCRIPCION_PARQUET",
 						"type": "DatasetReference"
 					},
-					"name": "sink1",
-					"description": "Export data to DIM_PERIODO_PARQUET"
+					"name": "sink1"
 				}
 			],
 			"transformations": [
@@ -109,7 +108,7 @@
 				"definciontipodecampo sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
-				"     partitionFileNames:['DIM_PERIODO_FINAL.parquet'],",
+				"     partitionFileNames:['FAC_INSCRIPCION_FINAL.parquet'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     partitionBy('hash', 1)) ~> sink1"

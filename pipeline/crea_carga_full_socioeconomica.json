@@ -213,7 +213,7 @@
 					},
 					{
 						"name": "Destination",
-						"value": "dwh_ups.dim_clasificacion_socieconomica"
+						"value": "dwh_lookup.dim_clasificacion_socieconomica_lookup"
 					}
 				],
 				"typeProperties": {
