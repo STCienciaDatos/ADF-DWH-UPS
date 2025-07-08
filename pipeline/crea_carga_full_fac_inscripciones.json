@@ -257,11 +257,11 @@
 				"userProperties": [
 					{
 						"name": "Source",
-						"value": "container-ins-mat/vdirectory_dim_postulante/POSTULANTES_FINAL.parquet"
+						"value": "container-ins-mat/vdirectory_fac_inscripcion /FAC_INSCRIPCION.parquet"
 					},
 					{
 						"name": "Destination",
-						"value": "dwh_lookup.dim_postulante_alumno_lookup"
+						"value": "dwh_lookup.fact_inscripcion_lookup"
 					}
 				],
 				"typeProperties": {
@@ -288,6 +288,13 @@
 						"type": "TabularTranslator",
 						"mappings": [
 							{
+								"sink": {
+									"name": "id_fac_inscripcion_lookup",
+									"type": "Int32",
+									"physicalType": "integer"
+								}
+							},
+							{
 								"source": {
 									"name": "estado_inscripcion",
 									"type": "String",
@@ -372,13 +379,6 @@
 								}
 							},
 							{
-								"source": {
-									"name": "codigo_interno_periodo",
-									"type": "Decimal",
-									"physicalType": "DECIMAL",
-									"scale": 18,
-									"precision": 38
-								},
 								"sink": {
 									"name": "codigo_interno_periodo_fk",
 									"type": "Decimal",
@@ -386,13 +386,6 @@
 								}
 							},
 							{
-								"source": {
-									"name": "codigo_interno_pos_alu",
-									"type": "Decimal",
-									"physicalType": "DECIMAL",
-									"scale": 18,
-									"precision": 38
-								},
 								"sink": {
 									"name": "codigo_interno_pos_alu_fk",
 									"type": "Decimal",
@@ -400,23 +393,13 @@
 								}
 							},
 							{
-								"source": {
-									"name": "codigo_interno_programa_academico",
-									"type": "String",
-									"physicalType": "UTF8"
-								},
 								"sink": {
 									"name": "codigo_interno_programa_academico_fk",
-									"type": "Decimal",
-									"physicalType": "numeric"
+									"type": "String",
+									"physicalType": "character varying"
 								}
 							},
 							{
-								"source": {
-									"name": "aud_fecha_adicion",
-									"type": "DateTime",
-									"physicalType": "INT96"
-								},
 								"sink": {
 									"name": "fecha_adicion",
 									"type": "DateTime",
@@ -424,15 +407,31 @@
 								}
 							},
 							{
-								"source": {
-									"name": "aud_fecha_modificacion",
-									"type": "DateTime",
-									"physicalType": "INT96"
-								},
 								"sink": {
 									"name": "fecha_modificacion",
 									"type": "DateTime",
 									"physicalType": "date"
+								}
+							},
+							{
+								"sink": {
+									"name": "hash",
+									"type": "String",
+									"physicalType": "text"
+								}
+							},
+							{
+								"sink": {
+									"name": "fecha_ultima_modificacion",
+									"type": "DateTime",
+									"physicalType": "date"
+								}
+							},
+							{
+								"sink": {
+									"name": "linaje",
+									"type": "String",
+									"physicalType": "text"
 								}
 							}
 						],
