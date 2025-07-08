@@ -21,8 +21,7 @@
 						"referenceName": "DIM_SOCIOECONOMICA_PARQUET",
 						"type": "DatasetReference"
 					},
-					"name": "sink1",
-					"description": "Export data to DIM_PERIODO_PARQUET"
+					"name": "sink1"
 				}
 			],
 			"transformations": [
@@ -60,7 +59,7 @@
 				"          nivel = iifNull(nivel, \"SIN DATO\"),",
 				"          raf_limite_inferior = iifNull(raf_limite_inferior, -1),",
 				"          raf_limite_superior = iifNull(raf_limite_superior, -1),",
-				"          aud_fecha_adicion = iifNull(aud_fecha_adicion, toTimestamp('1900-01-01T00:00:00Z')),",
+				"          aud_fecha_adicion = iif(    isNull(aud_fecha_adicion) || toString(aud_fecha_adicion) == '',    toDate('1900-01-01'),    toDate(toString(aud_fecha_adicion, 'yyyy-MM-dd'))),",
 				"          aud_fecha_modificacion = iif(    isNull(aud_fecha_modificacion) || toString(aud_fecha_modificacion) == '',    toDate('1900-01-01'),    toDate(toString(aud_fecha_modificacion, 'yyyy-MM-dd')))) ~> derivedColumn",
 				"verificaciondeduplicados cast(output(",
 				"          HASH as string,",
