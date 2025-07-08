@@ -209,11 +209,11 @@
 				"userProperties": [
 					{
 						"name": "Source",
-						"value": "container-ins-mat/vdirectory_dim_postulante/POSTULANTES_FINAL.parquet"
+						"value": "container-ins-mat/vdirectory_dim_socioeconomica/DIM_SOCIOECONOMICA_FINAL.parquet"
 					},
 					{
 						"name": "Destination",
-						"value": "dwh_lookup.dim_postulante_alumno_lookup"
+						"value": "dwh_ups.dim_clasificacion_socieconomica"
 					}
 				],
 				"typeProperties": {
