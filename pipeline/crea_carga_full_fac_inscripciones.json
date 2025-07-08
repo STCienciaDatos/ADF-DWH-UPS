@@ -434,27 +434,6 @@
 									"type": "DateTime",
 									"physicalType": "date"
 								}
-							},
-							{
-								"sink": {
-									"name": "hash",
-									"type": "String",
-									"physicalType": "text"
-								}
-							},
-							{
-								"sink": {
-									"name": "fecha_ultima_modificacion",
-									"type": "DateTime",
-									"physicalType": "date"
-								}
-							},
-							{
-								"sink": {
-									"name": "linaje",
-									"type": "String",
-									"physicalType": "text"
-								}
 							}
 						],
 						"typeConversion": true,
