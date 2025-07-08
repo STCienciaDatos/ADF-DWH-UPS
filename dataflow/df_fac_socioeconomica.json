@@ -1,0 +1,118 @@
+{
+	"name": "df_fac_socioeconomica",
+	"properties": {
+		"folder": {
+			"name": "DF_INSCRIPCIONES_MATRICULAS/FAC_SOCIOECONOMICA"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "FAC_INSCRIPCION_PARQUET",
+						"type": "DatasetReference"
+					},
+					"name": "source"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "FAC_INSCRIPCION_PARQUET",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn"
+				},
+				{
+					"name": "definciontipodecampo"
+				},
+				{
+					"name": "actualizacionycreaciondelhash"
+				},
+				{
+					"name": "verificaciondeduplicados"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          estado_inscripcion as string,",
+				"          fecha_inscripcion as timestamp,",
+				"          fecha_aprobacion as timestamp,",
+				"          jornada as string,",
+				"          tiene_matricula as string,",
+				"          tipo_inscripcion as string,",
+				"          vigencia_inscripcion as string,",
+				"          codigo_interno_periodo as decimal(38,18),",
+				"          codigo_interno_pos_alu as decimal(38,18),",
+				"          codigo_interno_programa_academico as string,",
+				"          aud_fecha_adicion as timestamp,",
+				"          aud_fecha_modificacion as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> source",
+				"source derive(estado_inscripcion = iifNull(estado_inscripcion, \"SIN DATO\"),",
+				"          fecha_inscripcion = iif(    isNull(fecha_inscripcion) || toString(fecha_inscripcion) == '',    toDate('1900-01-01'),    toDate(toString(fecha_inscripcion, 'yyyy-MM-dd'))),",
+				"          fecha_aprobacion = iif(    isNull(fecha_aprobacion) || toString(fecha_aprobacion) == '',    toDate('1900-01-01'),    toDate(toString(fecha_aprobacion, 'yyyy-MM-dd'))),",
+				"          jornada = iifNull(jornada, \"SIN DATO\"),",
+				"          tiene_matricula = iifNull(tiene_matricula, \"FALSE\"),",
+				"          tipo_inscripcion = iifNull(tipo_inscripcion, \"SIN DATO\"),",
+				"          vigencia_inscripcion = iifNull(vigencia_inscripcion, \"FALSE\"),",
+				"          codigo_interno_periodo = iifNull(codigo_interno_periodo, -1),",
+				"          codigo_interno_pos_alu = iifNull(codigo_interno_pos_alu, -1),",
+				"          codigo_interno_programa_academico = iifNull(codigo_interno_programa_academico, \"-1\"),",
+				"          aud_fecha_adicion = iif(    isNull(aud_fecha_adicion) || toString(aud_fecha_adicion) == '',    toDate('1900-01-01'),    toDate(toString(aud_fecha_adicion, 'yyyy-MM-dd'))),",
+				"          aud_fecha_modificacion = iif(    isNull(aud_fecha_modificacion) || toString(aud_fecha_modificacion) == '',    toDate('1900-01-01'),    toDate(toString(aud_fecha_modificacion, 'yyyy-MM-dd')))) ~> derivedColumn",
+				"verificaciondeduplicados cast(output(",
+				"          HASH as string,",
+				"          estado_inscripcion as string,",
+				"          fecha_inscripcion as date,",
+				"          fecha_aprobacion as date,",
+				"          jornada as string,",
+				"          tiene_matricula as boolean,",
+				"          tipo_inscripcion as string,",
+				"          vigencia_inscripcion as boolean,",
+				"          codigo_interno_periodo as integer,",
+				"          codigo_interno_pos_alu as integer,",
+				"          codigo_interno_programa_academico as string,",
+				"          aud_fecha_adicion as date,",
+				"          aud_fecha_modificacion as date,",
+				"          FECHA_ULTIMA_ACTUALIZACION as date,",
+				"          LINAJE as string",
+				"     ),",
+				"     errors: true) ~> definciontipodecampo",
+				"derivedColumn derive(HASH = md5(concat(estado_inscripcion, toString(fecha_inscripcion), toString(fecha_aprobacion), jornada, tiene_matricula, tipo_inscripcion, vigencia_inscripcion, toString(codigo_interno_periodo), toString(codigo_interno_pos_alu), toString(codigo_interno_programa_academico), toString(aud_fecha_adicion), toString(aud_fecha_modificacion))),",
+				"          FECHA_ULTIMA_ACTUALIZACION = currentTimestamp(),",
+				"          LINAJE = 'ins_alumno, cliente_local, ins_raza, ins_estado_civil') ~> actualizacionycreaciondelhash",
+				"actualizacionycreaciondelhash aggregate(groupBy(HASH),",
+				"     estado_inscripcion = max(estado_inscripcion),",
+				"          fecha_inscripcion = max(fecha_inscripcion),",
+				"          fecha_aprobacion = max(fecha_aprobacion),",
+				"          jornada = max(jornada),",
+				"          tiene_matricula = max(tiene_matricula),",
+				"          tipo_inscripcion = max(tipo_inscripcion),",
+				"          vigencia_inscripcion = max(vigencia_inscripcion),",
+				"          codigo_interno_periodo = max(codigo_interno_periodo),",
+				"          codigo_interno_pos_alu = max(codigo_interno_pos_alu),",
+				"          codigo_interno_programa_academico = max(codigo_interno_programa_academico),",
+				"          aud_fecha_adicion = max(aud_fecha_adicion),",
+				"          aud_fecha_modificacion = max(aud_fecha_modificacion),",
+				"          FECHA_ULTIMA_ACTUALIZACION = max(FECHA_ULTIMA_ACTUALIZACION),",
+				"          LINAJE = max(LINAJE)) ~> verificaciondeduplicados",
+				"definciontipodecampo sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     partitionFileNames:['FAC_INSCRIPCION_FINAL.parquet'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}

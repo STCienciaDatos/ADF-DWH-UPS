@@ -156,7 +156,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "df_periodo",
+						"referenceName": "df_fac_socioeconomica",
 						"type": "DataFlowReference"
 					},
 					"compute": {
@@ -212,7 +212,7 @@
 						"type": "AzurePostgreSqlSink",
 						"writeBatchSize": 1000000,
 						"writeBatchTimeout": "00:30:00",
-						"preCopyScript": "TRUNCATE TABLE dwh_lookup.dim_periodo_lookup;\n",
+						"preCopyScript": "TRUNCATE TABLE dwh_lookup.fact_clasificacion_socieconomica_pos_alu_lookup;\n",
 						"writeMethod": "CopyCommand"
 					},
 					"enableStaging": false,
@@ -385,13 +385,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "DIM_PERIODO_FINAL",
+						"referenceName": "FAC_SOCIOECONOMICA_FINAL",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "AZ_PG_PERIODO_LOOKUPS",
+						"referenceName": "AZ_PG_FAC_SOCIOECONOMICA_LOOKUPS",
 						"type": "DatasetReference"
 					}
 				]

@@ -1,0 +1,77 @@
+{
+	"name": "AZ_PG_FAC_SOCIOECONOMICA_LOOKUPS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzurePostgreSql1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzurePostgreSqlTable",
+		"schema": [
+			{
+				"name": "id_fact_clas_socioeconomica_pos_alu_lookup",
+				"type": "integer",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "codigo_interno_periodo_fk",
+				"type": "numeric",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "codigo_interno_pos_alu_fk",
+				"type": "numeric",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "codigo_interno_rango_ficha_fk",
+				"type": "numeric",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "valoracion",
+				"type": "numeric",
+				"precision": 10,
+				"scale": 2
+			},
+			{
+				"name": "fecha_adicion",
+				"type": "date",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "fecha_modificacion",
+				"type": "date",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "hash",
+				"type": "text",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "fecha_ultima_modificacion",
+				"type": "date",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "linaje",
+				"type": "text",
+				"precision": 0,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "dwh_lookup",
+			"table": "fact_clasificacion_socieconomica_pos_alu_lookup"
+		}
+	}
+}
