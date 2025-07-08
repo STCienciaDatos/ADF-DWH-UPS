@@ -3,7 +3,7 @@
 	"properties": {
 		"description": "actualizar la tabla en relación de una fecha y tiempo determinada",
 		"annotations": [],
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipelines": [],
 		"type": "ScheduleTrigger",
 		"typeProperties": {
