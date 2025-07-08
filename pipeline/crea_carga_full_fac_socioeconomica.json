@@ -156,7 +156,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "df_periodo",
+						"referenceName": "df_fac_socioeconomica",
 						"type": "DataFlowReference"
 					},
 					"compute": {
@@ -189,11 +189,11 @@
 				"userProperties": [
 					{
 						"name": "Source",
-						"value": "container-ins-mat/vdirectory_dim_postulante/POSTULANTES_FINAL.parquet"
+						"value": "container-ins-mat/vdirectory_fac_socioeconomica/FAC_SOCIOECONOMICA.parquet"
 					},
 					{
 						"name": "Destination",
-						"value": "dwh_lookup.dim_postulante_alumno_lookup"
+						"value": "dwh_lookup.fact_clasificacion_socieconomica_pos_alu_lookup"
 					}
 				],
 				"typeProperties": {
@@ -212,7 +212,6 @@
 						"type": "AzurePostgreSqlSink",
 						"writeBatchSize": 1000000,
 						"writeBatchTimeout": "00:30:00",
-						"preCopyScript": "TRUNCATE TABLE dwh_lookup.dim_periodo_lookup;\n",
 						"writeMethod": "CopyCommand"
 					},
 					"enableStaging": false,
@@ -385,13 +384,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "DIM_PERIODO_FINAL",
+						"referenceName": "FAC_SOCIOECONOMICA_FINAL",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "AZ_PG_PERIODO_LOOKUPS",
+						"referenceName": "AZ_PG_FAC_SOCIOECONOMICA_LOOKUPS",
 						"type": "DatasetReference"
 					}
 				]

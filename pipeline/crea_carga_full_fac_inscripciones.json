@@ -230,8 +230,8 @@
 						"type": "DataFlowReference"
 					},
 					"compute": {
-						"coreCount": 8,
-						"computeType": "General"
+						"coreCount": 32,
+						"computeType": "MemoryOptimized"
 					},
 					"traceLevel": "Fine"
 				}
@@ -239,8 +239,6 @@
 			{
 				"name": "Copy data2",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Data flow1",
@@ -259,11 +257,11 @@
 				"userProperties": [
 					{
 						"name": "Source",
-						"value": "container-ins-mat/vdirectory_dim_postulante/POSTULANTES_FINAL.parquet"
+						"value": "container-ins-mat/vdirectory_fac_inscripcion /FAC_INSCRIPCION.parquet"
 					},
 					{
 						"name": "Destination",
-						"value": "dwh_lookup.dim_postulante_alumno_lookup"
+						"value": "dwh_lookup.fact_inscripcion_lookup"
 					}
 				],
 				"typeProperties": {
@@ -290,107 +288,118 @@
 						"type": "TabularTranslator",
 						"mappings": [
 							{
-								"source": {
-									"name": "codigo_interno_periodo_cohorte",
-									"type": "Int32",
-									"physicalType": "INT32"
-								},
 								"sink": {
-									"name": "codigo_interno_periodo",
-									"type": "Decimal",
-									"physicalType": "numeric"
+									"name": "id_fac_inscripcion_lookup",
+									"type": "Int32",
+									"physicalType": "integer"
 								}
 							},
 							{
 								"source": {
-									"name": "periodo",
+									"name": "estado_inscripcion",
 									"type": "String",
 									"physicalType": "UTF8"
 								},
 								"sink": {
-									"name": "periodo",
+									"name": "estado_inscripcion",
 									"type": "String",
 									"physicalType": "character varying"
 								}
 							},
 							{
 								"source": {
-									"name": "indicador_par_impar",
-									"type": "String",
-									"physicalType": "UTF8"
-								},
-								"sink": {
-									"name": "indicador_par_impar",
-									"type": "String",
-									"physicalType": "character varying"
-								}
-							},
-							{
-								"source": {
-									"name": "anio_ini_periodo",
-									"type": "Int32",
-									"physicalType": "INT32"
-								},
-								"sink": {
-									"name": "anio_ini_periodo",
-									"type": "Decimal",
-									"physicalType": "numeric"
-								}
-							},
-							{
-								"source": {
-									"name": "mes_ini_periodo",
-									"type": "Int32",
-									"physicalType": "INT32"
-								},
-								"sink": {
-									"name": "mes_ini_periodo",
-									"type": "Decimal",
-									"physicalType": "numeric"
-								}
-							},
-							{
-								"source": {
-									"name": "fecha_inicio_periodo",
+									"name": "fecha_inscripcion",
 									"type": "DateTime",
-									"physicalType": "DATE"
+									"physicalType": "INT96"
 								},
 								"sink": {
-									"name": "fecha_inicio_periodo",
+									"name": "fecha_inscripcion",
 									"type": "DateTime",
 									"physicalType": "date"
 								}
 							},
 							{
 								"source": {
-									"name": "fecha_fin_periodo",
+									"name": "fecha_aprobacion",
 									"type": "DateTime",
-									"physicalType": "DATE"
+									"physicalType": "INT96"
 								},
 								"sink": {
-									"name": "fecha_fin_periodo",
+									"name": "fecha_aprobacion",
 									"type": "DateTime",
 									"physicalType": "date"
 								}
 							},
 							{
 								"source": {
-									"name": "tipo_periodo_cohorte",
+									"name": "jornada",
 									"type": "String",
 									"physicalType": "UTF8"
 								},
 								"sink": {
-									"name": "tipo_periodo",
+									"name": "jornada",
 									"type": "String",
 									"physicalType": "character varying"
 								}
 							},
 							{
 								"source": {
-									"name": "aud_fecha_adicion",
-									"type": "DateTime",
-									"physicalType": "DATE"
+									"name": "tiene_matricula",
+									"type": "String",
+									"physicalType": "UTF8"
 								},
+								"sink": {
+									"name": "tiene_matricula",
+									"type": "Boolean",
+									"physicalType": "boolean"
+								}
+							},
+							{
+								"source": {
+									"name": "tipo_inscripcion",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "tipo_inscripcion",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "vigencia_inscripcion",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "vigencia_inscripcion",
+									"type": "Boolean",
+									"physicalType": "boolean"
+								}
+							},
+							{
+								"sink": {
+									"name": "codigo_interno_periodo_fk",
+									"type": "Decimal",
+									"physicalType": "numeric"
+								}
+							},
+							{
+								"sink": {
+									"name": "codigo_interno_pos_alu_fk",
+									"type": "Decimal",
+									"physicalType": "numeric"
+								}
+							},
+							{
+								"sink": {
+									"name": "codigo_interno_programa_academico_fk",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
 								"sink": {
 									"name": "fecha_adicion",
 									"type": "DateTime",
@@ -398,11 +407,6 @@
 								}
 							},
 							{
-								"source": {
-									"name": "aud_fecha_modificacion",
-									"type": "DateTime",
-									"physicalType": "DATE"
-								},
 								"sink": {
 									"name": "fecha_modificacion",
 									"type": "DateTime",
@@ -410,11 +414,6 @@
 								}
 							},
 							{
-								"source": {
-									"name": "HASH",
-									"type": "String",
-									"physicalType": "UTF8"
-								},
 								"sink": {
 									"name": "hash",
 									"type": "String",
@@ -422,23 +421,13 @@
 								}
 							},
 							{
-								"source": {
-									"name": "FECHA_ULTIMA_ACTUALIZACION",
-									"type": "DateTime",
-									"physicalType": "DATE"
-								},
 								"sink": {
-									"name": "fecha_ultima_actualizacion",
+									"name": "fecha_ultima_modificacion",
 									"type": "DateTime",
 									"physicalType": "date"
 								}
 							},
 							{
-								"source": {
-									"name": "LINAJE",
-									"type": "String",
-									"physicalType": "UTF8"
-								},
 								"sink": {
 									"name": "linaje",
 									"type": "String",

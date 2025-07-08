@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "VIEW_TO_PARQUET",
+				"name": "On-Premise to Parquet",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -462,7 +462,7 @@
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
-						"activity": "VIEW_TO_PARQUET",
+						"activity": "On-Premise to Parquet",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -489,7 +489,7 @@
 				}
 			},
 			{
-				"name": "Copy data2",
+				"name": "Parquet to Flexible",
 				"type": "Copy",
 				"dependsOn": [
 					{

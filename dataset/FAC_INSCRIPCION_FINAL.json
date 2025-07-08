@@ -13,7 +13,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "FAC_INSCRIPCION_FINAL.parquet",
+
+				"fileName": "FAC_INSCRIPCION.parquet",
 				"folderPath": "vdirectory_fac_inscripcion ",
 				"container": "container-ins-mat"
 			},
