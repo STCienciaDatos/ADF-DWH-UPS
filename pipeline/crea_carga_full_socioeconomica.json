@@ -232,7 +232,7 @@
 						"type": "AzurePostgreSqlSink",
 						"writeBatchSize": 1000000,
 						"writeBatchTimeout": "00:30:00",
-						"preCopyScript": "TRUNCATE TABLE dwh_lookup.dim_clasificacion_socieconomica;\n",
+						"preCopyScript": "TRUNCATE TABLE dwh_lookup.dim_clasificacion_socieconomica_lookup;\n",
 						"writeMethod": "CopyCommand"
 					},
 					"enableStaging": false,
@@ -241,98 +241,74 @@
 						"mappings": [
 							{
 								"source": {
-									"name": "codigo_interno_periodo_cohorte",
+									"name": "codigo_interno_rango_ficha",
 									"type": "Int32",
 									"physicalType": "INT32"
 								},
 								"sink": {
-									"name": "codigo_interno_periodo",
+									"name": "codigo_interno_rango_ficha",
 									"type": "Decimal",
 									"physicalType": "numeric"
 								}
 							},
 							{
 								"source": {
-									"name": "periodo",
-									"type": "String",
-									"physicalType": "UTF8"
-								},
-								"sink": {
-									"name": "periodo",
-									"type": "String",
-									"physicalType": "character varying"
-								}
-							},
-							{
-								"source": {
-									"name": "indicador_par_impar",
-									"type": "String",
-									"physicalType": "UTF8"
-								},
-								"sink": {
-									"name": "indicador_par_impar",
-									"type": "String",
-									"physicalType": "character varying"
-								}
-							},
-							{
-								"source": {
-									"name": "anio_ini_periodo",
+									"name": "quintil",
 									"type": "Int32",
 									"physicalType": "INT32"
 								},
 								"sink": {
-									"name": "anio_ini_periodo",
+									"name": "quintil",
 									"type": "Decimal",
 									"physicalType": "numeric"
 								}
 							},
 							{
 								"source": {
-									"name": "mes_ini_periodo",
+									"name": "descripcion_quintil",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "descripcion_quintil",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "nivel",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "nivel",
+									"type": "String",
+									"physicalType": "character varying"
+								}
+							},
+							{
+								"source": {
+									"name": "raf_limite_inferior",
 									"type": "Int32",
 									"physicalType": "INT32"
 								},
 								"sink": {
-									"name": "mes_ini_periodo",
+									"name": "rango_limite_inferior",
 									"type": "Decimal",
 									"physicalType": "numeric"
 								}
 							},
 							{
 								"source": {
-									"name": "fecha_inicio_periodo",
-									"type": "DateTime",
-									"physicalType": "DATE"
+									"name": "raf_limite_superior",
+									"type": "Int32",
+									"physicalType": "INT32"
 								},
 								"sink": {
-									"name": "fecha_inicio_periodo",
-									"type": "DateTime",
-									"physicalType": "date"
-								}
-							},
-							{
-								"source": {
-									"name": "fecha_fin_periodo",
-									"type": "DateTime",
-									"physicalType": "DATE"
-								},
-								"sink": {
-									"name": "fecha_fin_periodo",
-									"type": "DateTime",
-									"physicalType": "date"
-								}
-							},
-							{
-								"source": {
-									"name": "tipo_periodo_cohorte",
-									"type": "String",
-									"physicalType": "UTF8"
-								},
-								"sink": {
-									"name": "tipo_periodo",
-									"type": "String",
-									"physicalType": "character varying"
+									"name": "rango_limite_superior",
+									"type": "Decimal",
+									"physicalType": "numeric"
 								}
 							},
 							{
@@ -378,7 +354,7 @@
 									"physicalType": "DATE"
 								},
 								"sink": {
-									"name": "fecha_ultima_actualizacion",
+									"name": "fecha_ultima_modificacion",
 									"type": "DateTime",
 									"physicalType": "date"
 								}
